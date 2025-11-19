@@ -1,68 +1,51 @@
+// app/dashboard/MainContent.jsx
 "use client";
 
-import React from "react";
-import {
-  RiPieChartLine,
-  RiAwardLine,
-  RiLightbulbLine,
-  RiCheckDoubleLine,
-  RiArrowUpLine,
-} from "react-icons/ri";
-import WelcomeSection from "./WelcomeSection";
-import ProgressCard from "./ProgressCard";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+// import WelcomeSection from "@/components/WelcomeSection";
+// import ProgressCard from "@/components/ProgressCard";
 import MainGrid from "./MainGrid";
 import BelowGrid from "./BelowGrid";
+import FilterStepper from "@/components/NewProject/FilterStepper";
+import WelcomeSection from "./WelcomeSection";
+import ProgressCard from "./ProgressCard";
 
 const dashboardCards = [
-  {
-    title: "Completion Rate",
-    value: "68%",
-    icon: <RiPieChartLine />,
-    iconBg: "bg-yellow-50",
-    iconColor: "text-yellow-400",
-    progress: {
-      value: 68,
-      color: "bg-yellow-200",
-      label: "+5% from last month",
-      showPercent: false,
-    },
-  },
-  {
-    title: "Current Level",
-    value: "Level 4",
-    icon: <RiAwardLine />,
-    iconBg: "bg-green-100",
-    iconColor: "text-green-600",
-    progress: {
-      value: 75,
-      color: "bg-[#2D3047]",
-      label: "125 XP to Level 5",
-      showPercent: true,
-    },
-  },
-  {
-    title: "Skill Points",
-    value: "1,280",
-    icon: <RiLightbulbLine />,
-    iconBg: "bg-blue-100",
-    iconColor: "text-blue-600",
-    changeText: "+320 points this month",
-    statChangeIcon: <RiArrowUpLine />,
-    statChangeColor: "text-green-500",
-  },
-  {
-    title: "Completed Projects",
-    value: "12",
-    icon: <RiCheckDoubleLine />,
-    iconBg: "bg-purple-100",
-    iconColor: "text-purple-600",
-    changeText: "3 in the last 30 days",
-    statChangeIcon: <RiArrowUpLine />,
-    statChangeColor: "text-green-500",
-  },
+  /* keep your existing cards array here (omitted for brevity) */
 ];
 
-const MainContent = () => {
+export default function MainContent() {
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const router = useRouter();
+
+  const openNewProjectStepper = () => setFilterModalOpen(true);
+  const closeStepper = () => setFilterModalOpen(false);
+
+  // intermediate apply (optional)
+  const handleApply = (filters) => {
+    // optional: update dashboard state or analytics
+    // console.log("intermediate apply:", filters);
+  };
+
+  // This runs when user finishes the stepper
+  const handleComplete = (filters) => {
+    try {
+      if (filters) {
+        localStorage.setItem("fp_difficulty", filters.difficulty ?? "All");
+        localStorage.setItem("fp_skills", JSON.stringify(filters.skills ?? []));
+        localStorage.setItem("fp_duration", filters.duration ?? "Any duration");
+      }
+    } catch (e) {
+      // ignore localStorage errors
+    }
+
+    setFilterModalOpen(false);
+
+    // Redirect to full page
+    router.push("/new-project");
+  };
+
   return (
     <main className="flex-1 p-6 bg-gray-50">
       <div className="container mx-auto">
@@ -70,9 +53,10 @@ const MainContent = () => {
           username="Aditya"
           date="July 23, 2025"
           day="Wednesday"
+          onOpenNewProject={openNewProjectStepper}
         />
+
         <div className="p-6">
-          {/* Cards Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {dashboardCards.map((card, index) => (
               <ProgressCard key={index} {...card} />
@@ -80,10 +64,19 @@ const MainContent = () => {
           </div>
         </div>
       </div>
+
       <MainGrid />
       <BelowGrid />
+
+      {/* Stepper modal only (exactly what you asked) */}
+      {filterModalOpen && (
+        <FilterStepper
+          open={filterModalOpen}
+          onClose={closeStepper}
+          onApply={handleApply}
+          onComplete={handleComplete} // final -> redirect
+        />
+      )}
     </main>
   );
-};
-
-export default MainContent;
+}

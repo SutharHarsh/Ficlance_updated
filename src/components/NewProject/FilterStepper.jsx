@@ -1,12 +1,14 @@
+// components/NewProject/FilterStepper.jsx
 "use client";
 
-import React, { useState, Children, useRef, useLayoutEffect, useMemo } from "react";
+import React, { useState, Children, useRef, useLayoutEffect, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
+import PropTypes from "prop-types";
 
 /* --------------------------------------------------------------------------
-   STEPPER COMPONENT
--------------------------------------------------------------------------- */
+   STEPPER COMPONENT (same as your implementation)
+----------------------------------------------------------------------------*/
 
 function Stepper({
   children,
@@ -194,8 +196,7 @@ function Step({ children }) {
 }
 
 function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators }) {
-  const status =
-    currentStep === step ? "active" : currentStep < step ? "inactive" : "complete";
+  const status = currentStep === step ? "active" : currentStep < step ? "inactive" : "complete";
 
   return (
     <motion.div
@@ -245,21 +246,14 @@ function StepConnector({ isComplete }) {
 function CheckIcon(props) {
   return (
     <svg {...props} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-      <motion.path
-        initial={{ pathLength: 0 }}
-        animate={{ pathLength: 1 }}
-        transition={{ delay: 0.1, duration: 0.3 }}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M5 13l4 4L19 7"
-      />
+      <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.1, duration: 0.3 }} strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
   );
 }
 
 /* --------------------------------------------------------------------------
-   FILTER STEPPER
--------------------------------------------------------------------------- */
+   FILTER STEPPER UI (your code, minor integration tweaks)
+----------------------------------------------------------------------------*/
 
 const DIFFICULTIES = ["All", "Beginner", "Intermediate", "Advanced"];
 const DURATIONS = ["Any duration", "1-2 days", "3-5 days", "1 week+"];
@@ -276,12 +270,25 @@ const SKILL_MAP = {
   "Socket.io": ["Realtime", "Websockets"],
 };
 
-export default function FilterStepper({ open = true, onClose, onApply = () => {} }) {
+export default function FilterStepper({ open = true, onClose, onApply = () => {}, onComplete = () => {} }) {
   const [difficulty, setDifficulty] = useState("All");
   const [selectedSkills, setSelectedSkills] = useState(["Frontend", "React"]);
   const [duration, setDuration] = useState("Any duration");
-
   const [expandedSkill, setExpandedSkill] = useState(null);
+
+  useEffect(() => {
+    // load saved filters if present so user continues previous session
+    try {
+      const d = localStorage.getItem("fp_difficulty");
+      const s = JSON.parse(localStorage.getItem("fp_skills") || "null");
+      const du = localStorage.getItem("fp_duration");
+      if (d) setDifficulty(d);
+      if (Array.isArray(s)) setSelectedSkills(s);
+      if (du) setDuration(du);
+    } catch {
+      // ignore
+    }
+  }, [open]);
 
   const masterSkillList = useMemo(() => {
     const set = new Set();
@@ -292,31 +299,47 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
   }, []);
 
   const toggleSkill = (skill) => {
-    setSelectedSkills((prev) =>
-      prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
-    );
-
+    setSelectedSkills((prev) => (prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]));
     if (SKILL_MAP[skill]) {
       setExpandedSkill((prev) => (prev === skill ? null : skill));
     }
   };
 
-  const handleApply = () => {
+  const saveFiltersToLocal = (f) => {
+    try {
+      localStorage.setItem("fp_difficulty", f.difficulty ?? "All");
+      localStorage.setItem("fp_skills", JSON.stringify(f.skills ?? []));
+      localStorage.setItem("fp_duration", f.duration ?? "Any duration");
+    } catch {
+      // ignore localStorage errors
+    }
+  };
+
+  // When the user finishes the stepper (final step), this runs.
+  // It saves to localStorage, calls onApply (for backward compat), calls onComplete (parent will redirect),
+  // and closes the modal.
+  const handleFinish = () => {
     const filters = { difficulty, skills: selectedSkills, duration };
-    onApply(filters);
+    saveFiltersToLocal(filters);
+    if (typeof onApply === "function") onApply(filters);
+    if (typeof onComplete === "function") onComplete(filters); // <-- parent will redirect
     onClose?.();
   };
 
-  if (!open) return null;
+  // Keep existing handleApply for intermediate use if needed
+  const handleApplyIntermediate = () => {
+    const filters = { difficulty, skills: selectedSkills, duration };
+    saveFiltersToLocal(filters);
+    if (typeof onApply === "function") onApply(filters);
+  };
 
-  /* --------------------------------------------------------------------------
-     UI
-  -------------------------------------------------------------------------- */
+  const LIMITED_SKILLS = masterSkillList.slice(0, 10);
+
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden">
-
         {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-gray-50 to-white">
           <div>
@@ -324,25 +347,18 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
             <p className="text-sm text-gray-500 mt-0.5">Customize your project search</p>
           </div>
 
-          <button className="p-2 rounded-lg hover:bg-gray-100" onClick={onClose}>
+          <button className="p-2 rounded-lg hover:bg-gray-100" onClick={onClose} aria-label="Close">
             <X className="w-5 h-5 text-gray-500" />
           </button>
         </div>
 
         {/* CONTENT */}
         <div className="p-6">
-          <Stepper
-            initialStep={1}
-            backButtonText="Previous"
-            nextButtonText="Continue"
-            onFinalStepCompleted={handleApply}
-          >
-
+          <Stepper initialStep={1} backButtonText="Previous" nextButtonText="Continue" onFinalStepCompleted={handleFinish}>
             {/* STEP 1 – DIFFICULTY */}
             <Step>
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900">Select Difficulty Level</h3>
-
                 <div className="grid grid-cols-2 gap-3">
                   {DIFFICULTIES.map((d) => {
                     const active = difficulty === d;
@@ -350,11 +366,7 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
                       <button
                         key={d}
                         onClick={() => setDifficulty(d)}
-                        className={`px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ${
-                          active
-                            ? "bg-[#2D3047] border-[#2D3047] text-yellow-400 shadow-lg"
-                            : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"
-                        }`}
+                        className={`px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ${active ? "bg-[#2D3047] border-[#2D3047] text-yellow-400 shadow-lg" : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"}`}
                       >
                         {d}
                       </button>
@@ -365,88 +377,62 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
             </Step>
 
             {/* STEP 2 – SKILLS */}
-           {/* STEP 2: Skills */}
-<Step>
-  <div className="space-y-4">
-    <div>
-      <h3 className="text-lg font-semibold text-gray-900 mb-1">Choose Technical Skills</h3>
-      <p className="text-sm text-gray-600">Select technologies you want to work with</p>
-    </div>
+            <Step>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Choose Technical Skills</h3>
+                  <p className="text-sm text-gray-600">Select technologies you want to work with</p>
+                </div>
 
-    {(() => {
-      const LIMITED_SKILLS = masterSkillList.slice(0, 10);
+                <div className="max-h-[280px] overflow-y-auto pr-2 custom-scrollbar space-y-3">
+                  {(() => {
+                    let flatList = [];
+                    LIMITED_SKILLS.forEach((skill) => {
+                      flatList.push({ type: "main", label: skill });
+                      if (expandedSkill === skill && SKILL_MAP[skill]) {
+                        SKILL_MAP[skill].forEach((child) => flatList.push({ type: "sub", label: child }));
+                      }
+                    });
+                    return flatList.map((item) => {
+                      const selected = selectedSkills.includes(item.label);
+                      return (
+                        <button
+                          key={item.label}
+                          onClick={() => toggleSkill(item.label)}
+                          className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${selected ? "bg-[#2D3047] border-[#2D3047] text-yellow-400" : item.type === "main" ? "bg-white border-gray-300 text-gray-800" : "bg-yellow-50 border-yellow-300 text-gray-800"}`}
+                        >
+                          {item.label}
+                        </button>
+                      );
+                    });
+                  })()}
+                </div>
 
-      // Flatten main + inline sub-skills
-      let flatList = [];
-      LIMITED_SKILLS.forEach((skill) => {
-        flatList.push({ type: "main", label: skill });
+                <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                  <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Selected ({selectedSkills.length})</div>
+                  <div className="text-sm text-gray-900 font-medium">{selectedSkills.length ? selectedSkills.join(", ") : "No skills selected"}</div>
+                </div>
+              </div>
 
-        if (expandedSkill === skill && SKILL_MAP[skill]) {
-          SKILL_MAP[skill].forEach((child) => {
-            flatList.push({ type: "sub", label: child });
-          });
-        }
-      });
+              <style jsx>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                  width: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                  background: #f3f4f6;
+                  border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                  background: #d1d5db;
+                  border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                  background: #9ca3af;
+                }
+              `}</style>
+            </Step>
 
-      return (
-        <div className="max-h-[280px] overflow-y-auto pr-2 custom-scrollbar space-y-3">
-
-          {flatList.map((item) => {
-            const selected = selectedSkills.includes(item.label);
-
-            return (
-              <button
-                key={item.label}
-                onClick={() => toggleSkill(item.label)}
-                className={`px-4 py-2 rounded-full text-sm font-medium border transition-all
-                  ${
-                    selected
-                      ? "bg-[#2D3047] border-[#2D3047] text-yellow-400"
-                      : item.type === "main"
-                      ? "bg-white border-gray-300 text-gray-800"
-                      : "bg-yellow-50 border-yellow-300 text-gray-800"
-                  }`}
-              >
-                {item.label}
-              </button>
-            );
-          })}
-
-        </div>
-      );
-    })()}
-
-    {/* Selected summary */}
-    <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-        Selected ({selectedSkills.length})
-      </div>
-      <div className="text-sm text-gray-900 font-medium">
-        {selectedSkills.length ? selectedSkills.join(", ") : "No skills selected"}
-      </div>
-    </div>
-  </div>
-
-  <style jsx>{`
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: #f3f4f6;
-      border-radius: 10px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #d1d5db;
-      border-radius: 10px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #9ca3af;
-    }
-  `}</style>
-</Step>
-
-
-            {/* STEP 3 — DURATION */}
+            {/* STEP 3 – DURATION */}
             <Step>
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900">Project Duration</h3>
@@ -458,11 +444,7 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
                       <button
                         key={d}
                         onClick={() => setDuration(d)}
-                        className={`px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ${
-                          active
-                            ? "bg-[#2D3047] border-[#2D3047] text-yellow-400 shadow-lg"
-                            : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"
-                        }`}
+                        className={`px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ${active ? "bg-[#2D3047] border-[#2D3047] text-yellow-400 shadow-lg" : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"}`}
                       >
                         {d}
                       </button>
@@ -471,10 +453,7 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
                 </div>
 
                 <div className="bg-gradient-to-br from-[#2D3047] to-[#1f2133] rounded-xl p-5 text-white shadow-xl mt-6">
-                  <div className="text-sm font-semibold text-yellow-400 uppercase mb-3">
-                    Filter Summary
-                  </div>
-
+                  <div className="text-sm font-semibold text-yellow-400 uppercase mb-3">Filter Summary</div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-300">Difficulty:</span>
@@ -498,3 +477,10 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
     </div>
   );
 }
+
+FilterStepper.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  onApply: PropTypes.func,
+  onComplete: PropTypes.func, // parent will redirect
+};
