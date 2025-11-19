@@ -120,7 +120,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body>
-        <Nav />
+        {/* <Nav /> */}
         {/* Quick debug link to NextAuth's built-in sign-in page */}
         <a
           href="/api/auth/signin"

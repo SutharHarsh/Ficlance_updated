@@ -1,125 +1,127 @@
-"use client"; // ✅ Required for client components (because of useState)
+"use client"; 
 
 import { useEffect, useMemo, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaCode, FaPlay } from "react-icons/fa";
 import ProjectCard from "./ProjectCard";
+import { useRouter } from "next/navigation";
+
+const projectsData = [
+  {
+    id: 1,
+    title: "E-commerce Product Page",
+    description:
+      "Design and develop a responsive product page with filtering options, image gallery, and add-to-cart functionality.",
+    duration: "3-5 days",
+    difficulty: "Intermediate",
+    difficultyLevel: 3,
+    estimatedHours: "12-15",
+    technologies: ["React", "CSS", "API"],
+    gradientColors: "from-blue-500 via-blue-600 to-indigo-600",
+  },
+  {
+    id: 2,
+    title: "Landing Page Design",
+    description:
+      "Create a modern landing page for a SaaS product with responsive layout, animations, and email signup form.",
+    duration: "1-2 days",
+    difficulty: "Beginner",
+    difficultyLevel: 2,
+    estimatedHours: "6-8",
+    technologies: ["HTML", "CSS", "JavaScript"],
+    gradientColors: "from-purple-500 via-purple-600 to-pink-500",
+  },
+  {
+    id: 3,
+    title: "Dashboard UI Development",
+    description:
+      "Build a complete admin dashboard with data visualization, user management, and responsive layouts.",
+    duration: "1 week+",
+    difficulty: "Advanced",
+    difficultyLevel: 4,
+    estimatedHours: "20-25",
+    technologies: ["React", "TypeScript", "Chart.js"],
+    gradientColors: "from-green-500 via-emerald-500 to-teal-500",
+  },
+  {
+    id: 4,
+    title: "Blog Platform API",
+    description:
+      "Develop a RESTful API for a blog platform with user authentication, post management, and comments.",
+    duration: "3-5 days",
+    difficulty: "Intermediate",
+    difficultyLevel: 3,
+    estimatedHours: "15-18",
+    technologies: ["Node.js", "Express", "MongoDB"],
+    gradientColors: "from-yellow-400 via-orange-400 to-orange-500",
+  },
+  {
+    id: 5,
+    title: "Mobile App UI Design",
+    description:
+      "Create a mobile app UI design for a fitness tracking application with clean and modern aesthetics.",
+    duration: "1-2 days",
+    difficulty: "Beginner",
+    difficultyLevel: 2,
+    estimatedHours: "8-10",
+    technologies: ["Figma", "UI/UX", "Mobile"],
+    gradientColors: "from-red-500 via-rose-500 to-pink-500",
+  },
+  {
+    id: 6,
+    title: "Full-Stack Social Platform",
+    description:
+      "Build a social media platform with user profiles, posts, comments, and real-time notifications.",
+    duration: "1 week+",
+    difficulty: "Advanced",
+    difficultyLevel: 5,
+    estimatedHours: "30-35",
+    technologies: ["React", "Node.js", "Socket.io"],
+    gradientColors: "from-blue-400 via-cyan-400 to-cyan-500",
+  },
+];
+
+const additionalProjects = [
+  {
+    id: 7,
+    title: "Weather App PWA",
+    description:
+      "Create a progressive web app for weather forecasting with offline functionality and location services.",
+    duration: "2-3 days",
+    difficulty: "Intermediate",
+    difficultyLevel: 3,
+    estimatedHours: "10-12",
+    technologies: ["React", "PWA", "API"],
+    gradientColors: "from-cyan-500 via-sky-500 to-blue-500",
+  },
+  {
+    id: 8,
+    title: "Task Management Tool",
+    description:
+      "Build a collaborative task management application with drag-and-drop functionality and team features.",
+    duration: "1 week",
+    difficulty: "Advanced",
+    difficultyLevel: 4,
+    estimatedHours: "25-30",
+    technologies: ["React", "Node.js", "MongoDB"],
+    gradientColors: "from-emerald-500 via-green-500 to-teal-600",
+  },
+  {
+    id: 9,
+    title: "Real-time Chat Application",
+    description:
+      "Develop a real-time messaging app with file sharing, emoji support, and group chat functionality.",
+    duration: "4-6 days",
+    difficulty: "Advanced",
+    difficultyLevel: 4,
+    estimatedHours: "18-22",
+    technologies: ["React", "Socket.io", "Node.js"],
+    gradientColors: "from-violet-500 via-purple-500 to-indigo-600",
+  },
+];
 
 
-
-  const projectsData = [
-    {
-      id: 1,
-      title: "E-commerce Product Page",
-      description:
-        "Design and develop a responsive product page with filtering options, image gallery, and add-to-cart functionality.",
-      duration: "3-5 days",
-      difficulty: "Intermediate",
-      difficultyLevel: 3,
-      estimatedHours: "12-15",
-      technologies: ["React", "CSS", "API"],
-      gradientColors: "from-blue-500 via-blue-600 to-indigo-600",
-    },
-    {
-      id: 2,
-      title: "Landing Page Design",
-      description:
-        "Create a modern landing page for a SaaS product with responsive layout, animations, and email signup form.",
-      duration: "1-2 days",
-      difficulty: "Beginner",
-      difficultyLevel: 2,
-      estimatedHours: "6-8",
-      technologies: ["HTML", "CSS", "JavaScript"],
-      gradientColors: "from-purple-500 via-purple-600 to-pink-500",
-    },
-    {
-      id: 3,
-      title: "Dashboard UI Development",
-      description:
-        "Build a complete admin dashboard with data visualization, user management, and responsive layouts.",
-      duration: "1 week+",
-      difficulty: "Advanced",
-      difficultyLevel: 4,
-      estimatedHours: "20-25",
-      technologies: ["React", "TypeScript", "Chart.js"],
-      gradientColors: "from-green-500 via-emerald-500 to-teal-500",
-    },
-    {
-      id: 4,
-      title: "Blog Platform API",
-      description:
-        "Develop a RESTful API for a blog platform with user authentication, post management, and comments.",
-      duration: "3-5 days",
-      difficulty: "Intermediate",
-      difficultyLevel: 3,
-      estimatedHours: "15-18",
-      technologies: ["Node.js", "Express", "MongoDB"],
-      gradientColors: "from-yellow-400 via-orange-400 to-orange-500",
-    },
-    {
-      id: 5,
-      title: "Mobile App UI Design",
-      description:
-        "Create a mobile app UI design for a fitness tracking application with clean and modern aesthetics.",
-      duration: "1-2 days",
-      difficulty: "Beginner",
-      difficultyLevel: 2,
-      estimatedHours: "8-10",
-      technologies: ["Figma", "UI/UX", "Mobile"],
-      gradientColors: "from-red-500 via-rose-500 to-pink-500",
-    },
-    {
-      id: 6,
-      title: "Full-Stack Social Platform",
-      description:
-        "Build a social media platform with user profiles, posts, comments, and real-time notifications.",
-      duration: "1 week+",
-      difficulty: "Advanced",
-      difficultyLevel: 5,
-      estimatedHours: "30-35",
-      technologies: ["React", "Node.js", "Socket.io"],
-      gradientColors: "from-blue-400 via-cyan-400 to-cyan-500",
-    },
-  ];
-
-  const additionalProjects = [
-    {
-      id: 7,
-      title: "Weather App PWA",
-      description:
-        "Create a progressive web app for weather forecasting with offline functionality and location services.",
-      duration: "2-3 days",
-      difficulty: "Intermediate",
-      difficultyLevel: 3,
-      estimatedHours: "10-12",
-      technologies: ["React", "PWA", "API"],
-      gradientColors: "from-cyan-500 via-sky-500 to-blue-500",
-    },
-    {
-      id: 8,
-      title: "Task Management Tool",
-      description:
-        "Build a collaborative task management application with drag-and-drop functionality and team features.",
-      duration: "1 week",
-      difficulty: "Advanced",
-      difficultyLevel: 4,
-      estimatedHours: "25-30",
-      technologies: ["React", "Node.js", "MongoDB"],
-      gradientColors: "from-emerald-500 via-green-500 to-teal-600",
-    },
-    {
-      id: 9,
-      title: "Real-time Chat Application",
-      description:
-        "Develop a real-time messaging app with file sharing, emoji support, and group chat functionality.",
-      duration: "4-6 days",
-      difficulty: "Advanced",
-      difficultyLevel: 4,
-      estimatedHours: "18-22",
-      technologies: ["React", "Socket.io", "Node.js"],
-      gradientColors: "from-violet-500 via-purple-500 to-indigo-600",
-    },
-  ];
+// const router = useRouter();
 
 const projectMatchesFilters = (project, filters) => {
   if (!filters) return true;
@@ -128,14 +130,20 @@ const projectMatchesFilters = (project, filters) => {
 
   // Difficulty filter
   if (difficulty && difficulty !== "All") {
-    if (!project.difficulty || project.difficulty.toLowerCase() !== difficulty.toLowerCase()) {
+    if (
+      !project.difficulty ||
+      project.difficulty.toLowerCase() !== difficulty.toLowerCase()
+    ) {
       return false;
     }
   }
 
   // Duration filter
   if (duration && duration !== "Any duration") {
-    if (!project.duration || !project.duration.toLowerCase().includes(duration.split(" ")[0])) {
+    if (
+      !project.duration ||
+      !project.duration.toLowerCase().includes(duration.split(" ")[0])
+    ) {
       // fallback check: if duration text doesn't include the same token, attempt simple contains
       if (!project.duration.toLowerCase().includes(duration.toLowerCase())) {
         return false;
@@ -146,8 +154,9 @@ const projectMatchesFilters = (project, filters) => {
   // Skills filter (if any skills selected)
   if (Array.isArray(skills) && skills.length > 0) {
     // normalize strings
-    const projectTechs = (project.technologies || [])
-      .map((t) => (t || "").toLowerCase());
+    const projectTechs = (project.technologies || []).map((t) =>
+      (t || "").toLowerCase()
+    );
 
     // If any selected skill matches any project tech (loose matching), it's a hit.
     const selected = skills.map((s) => (s || "").toLowerCase());
@@ -162,13 +171,16 @@ const projectMatchesFilters = (project, filters) => {
   return true;
 };
 
-
 export default function ProjectSection({ filters = null }) {
+    const router = useRouter(); 
   const [selectedProject, setSelectedProject] = useState(null);
   const [showAllProjects, setShowAllProjects] = useState(false);
 
   // combine lists
-  const allProjects = useMemo(() => [...projectsData, ...additionalProjects], []);
+  const allProjects = useMemo(
+    () => [...projectsData, ...additionalProjects],
+    []
+  );
 
   // compute displayed projects based on filters
   const filteredProjects = useMemo(() => {
@@ -177,7 +189,9 @@ export default function ProjectSection({ filters = null }) {
     }
     // apply filter to full list (include additionalProjects when filtering)
     const listToSearch = allProjects;
-    const result = listToSearch.filter((p) => projectMatchesFilters(p, filters));
+    const result = listToSearch.filter((p) =>
+      projectMatchesFilters(p, filters)
+    );
     // if user didn't explicitly click Load More, show up to 6
     return showAllProjects ? result : result.slice(0, 6);
   }, [filters, showAllProjects, allProjects]);
@@ -255,14 +269,35 @@ export default function ProjectSection({ filters = null }) {
                   {allProjects.find((p) => p.id === selectedProject)?.title}
                 </h4>
                 <p className="text-sm text-gray-600 mt-1">
-                  {allProjects.find((p) => p.id === selectedProject)?.difficulty} •
-                  Est. {allProjects.find((p) => p.id === selectedProject)?.estimatedHours} hours
+                  {
+                    allProjects.find((p) => p.id === selectedProject)
+                      ?.difficulty
+                  }{" "}
+                  • Est.{" "}
+                  {
+                    allProjects.find((p) => p.id === selectedProject)
+                      ?.estimatedHours
+                  }{" "}
+                  hours
                 </p>
               </div>
             </div>
 
             {/* CTA Button with Play Icon */}
-            <button className="group inline-flex items-center gap-2 px-6 py-2 bg-[#2D3047] text-white text-sm sm:text-base font-semibold rounded-full hover:bg-[#1f2235] transition duration-200 shadow-md">
+            <button
+              className="group inline-flex items-center gap-2 px-6 py-2 bg-[#2D3047] text-white 
+             text-sm sm:text-base font-semibold rounded-full 
+             hover:bg-[#1f2235] transition duration-200 shadow-md"
+              onClick={() => {
+                const project = allProjects.find(
+                  (p) => p.id === selectedProject
+                );
+                if (!project) return;
+
+                const slug = project.title.toLowerCase().replace(/\s+/g, "-");
+                router.push(`/client/${slug}`);
+              }}
+            >
               <FaPlay className="text-xs group-hover:scale-110 transition-transform duration-200" />
               Start Simulating
             </button>
