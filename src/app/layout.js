@@ -122,7 +122,7 @@ export default function RootLayout({ children }) {
       <body>
         {/* <Nav /> */}
         {/* Quick debug link to NextAuth's built-in sign-in page */}
-        <a
+        {/* <a
           href="/api/auth/signin"
           style={{
             position: "fixed",
@@ -138,7 +138,7 @@ export default function RootLayout({ children }) {
           }}
         >
           Sign in
-        </a>
+        </a> */}
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -47,7 +47,7 @@ const HowItWorksCard = ({ icon, title, description, bg }) => (
 
 const HowItWorks = () => {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">How Ficlance Works</h2>
