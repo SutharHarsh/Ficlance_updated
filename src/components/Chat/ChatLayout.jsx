@@ -1,117 +1,195 @@
 // components/Chat/ChatLayout.jsx
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import ChatList from "./ChatList";
 import ChatWindow from "./ChatWindow";
 import ProjectSidebar from "./ProjectSidebar";
 import { FiArrowLeft } from "react-icons/fi";
+import { MdDashboard, MdWork, MdPerson, MdInfo } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
+import { useSession } from "next-auth/react";
 
-const SAMPLE_CHATS = [
-  { id: "website-redesign", title: "Website Redesign Project", subtitle: "Emma Clarke (Client)", last: "Could you share the latest mockups?", time: "10:42 AM", unread: 2 },
-  { id: "mobile-app", title: "Mobile App Development", subtitle: "Client Team", last: "The timeline looks good.", time: "Yesterday" },
-  { id: "logo", title: "Logo Design Project", subtitle: "Creative", last: "I've approved the final design.", time: "Jun 28" },
-  { id: "ecommerce-integration", title: "E-commerce Integration", subtitle: "Sales", last: "Can we schedule a call?", time: "Jun 27" },
-  { id: "content-writing", title: "Content Writing", subtitle: "Marketing", last: "The blog posts look fantastic.", time: "Jun 25" },
-];
-
-export default function ChatLayout({ projectSlug }) {
+export default function ChatLayout({ projectSlug, initialConversation, initialMessages }) {
   const router = useRouter();
-  // derive initial selected chat: if projectSlug matches any chat id use it, else use first
-  const initialSelected = useMemo(() => {
-    if (!projectSlug) return SAMPLE_CHATS[0].id;
-    const match = SAMPLE_CHATS.find((c) => c.id === projectSlug);
-    return match ? match.id : SAMPLE_CHATS[0].id;
+  const { data: session } = useSession();
+  const [chats, setChats] = useState([]);
+  const [selectedChatId, setSelectedChatId] = useState(projectSlug);
+  const [showSidebar, setShowSidebar] = useState(true); // Right sidebar
+  const [mobileView, setMobileView] = useState("chat"); // 'list', 'chat', 'info'
+
+  // Fetch all conversations for the user
+  useEffect(() => {
+    if (session?.user?.email) {
+      fetch(`/api/conversations?userId=${session.user.email}`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            const formattedChats = data.map(c => ({
+              id: c._id,
+              title: c.projectName,
+              subtitle: c.participants.find(p => p.role === "assistant")?.name || "AI Assistant",
+              last: c.lastMessage?.content || "No messages yet",
+              time: c.lastMessage ? new Date(c.lastMessage.createdAt).toLocaleDateString() : "",
+              unread: 0, // TODO: Implement unread count
+              ...c
+            }));
+            setChats(formattedChats);
+          }
+        })
+        .catch(err => console.error("Error fetching chats:", err));
+    }
+  }, [session]);
+
+  // Update selected chat when prop changes
+  useEffect(() => {
+    if (projectSlug) {
+      setSelectedChatId(projectSlug);
+      setMobileView("chat");
+    }
   }, [projectSlug]);
 
-  const [selectedChat, setSelectedChat] = useState(initialSelected);
-  // mobile view: true = show chat window, false = show list
-  const [mobileShowChat, setMobileShowChat] = useState(Boolean(projectSlug));
-
   const handleSelectChat = (chatId) => {
-    setSelectedChat(chatId);
-    setMobileShowChat(true);
-    // update URL so user can copy link for a specific chat
-    router.push(`/client/${chatId}`);
+    setSelectedChatId(chatId);
+    setMobileView("chat");
+    router.push(`/chat/${chatId}`);
   };
 
   const handleBackToList = () => {
-    setMobileShowChat(false);
-    // go to /client with no slug (optional)
-    router.push(`/client`);
+    setMobileView("list");
+  };
+
+  const toggleSidebar = () => {
+    if (window.innerWidth < 1024) {
+        setMobileView("info");
+        setShowSidebar(true);
+    } else {
+        setShowSidebar(!showSidebar);
+    }
+  };
+
+  const currentChatData = chats.find(c => c.id === selectedChatId) || {
+      id: initialConversation?._id,
+      title: initialConversation?.projectName,
+      subtitle: initialConversation?.participants?.find(p => p.role === "assistant")?.name || "AI Assistant",
+      ...initialConversation
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      {/* Top header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-[1400px] mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center">
-            <a className="text-2xl font-['Pacifico'] text-primary mr-8">logo</a>
-            <nav className="hidden md:flex space-x-6">
-              <a className="text-gray-600 hover:text-primary font-medium">Dashboard</a>
-              <a className="text-primary font-medium border-b-2 border-primary pb-1">Messages</a>
-              <a className="text-gray-600 hover:text-primary font-medium">Missions</a>
-            </nav>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 cursor-pointer">🔔</div>
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs flex items-center justify-center rounded-full">3</span>
+    <div className="h-screen flex bg-gray-100 overflow-hidden">
+      {/* Left: Chat List */}
+      <div className={`${mobileView === "list" ? "flex" : "hidden"} md:flex w-full md:w-[350px] md:min-w-[300px] flex-col border-r border-gray-200 bg-white z-10`}>
+        {/* Header for List */}
+        <div className="h-16 bg-gray-50 border-b border-gray-200 flex items-center justify-between px-4 shrink-0">
+            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                {/* User Avatar */}
+                <span className="text-gray-500 font-medium">{session?.user?.name?.[0] || "U"}</span>
             </div>
-            <div className="flex items-center">
-              <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center mr-2">
-                <span className="text-primary font-medium">JD</span>
-              </div>
-              <span className="text-sm font-medium hidden md:block">John Doe</span>
+            <div className="flex space-x-4 text-gray-600">
+                <button title="New Chat" className="hover:bg-gray-200 p-2 rounded-full">➕</button>
+                <button title="Menu" className="hover:bg-gray-200 p-2 rounded-full">⋮</button>
             </div>
-          </div>
         </div>
-      </header>
+        
+        <ChatList chats={chats} selected={selectedChatId} onSelect={handleSelectChat} />
+      </div>
 
-      <main className="flex-1 flex overflow-hidden">
-        {/* Left: Chat List */}
-        <div className={`w-80 border-r border-gray-200 bg-white flex flex-col transform transition-transform duration-150 ${mobileShowChat ? "translate-x-[-100%] md:translate-x-0" : "translate-x-0"}`}>
-          <ChatList chats={SAMPLE_CHATS} selected={selectedChat} onSelect={handleSelectChat} />
-        </div>
-
-        {/* Center: Chat Window */}
-        <div className="flex-1 flex flex-col bg-white">
-          {/* Mobile back header */}
-          <div className="md:hidden border-b border-gray-200">
-            {!mobileShowChat ? (
-              <div className="p-3 text-sm text-center text-gray-500">Select a conversation</div>
-            ) : (
-              <div className="flex items-center p-3">
-                <button onClick={handleBackToList} className="w-9 h-9 mr-2 rounded-full hover:bg-gray-100 flex items-center justify-center">
-                  <FiArrowLeft />
-                </button>
-                <div>
-                  <div className="text-sm font-medium">{SAMPLE_CHATS.find(c => c.id === selectedChat)?.title}</div>
-                  <div className="text-xs text-gray-500">{SAMPLE_CHATS.find(c => c.id === selectedChat)?.subtitle} • Online</div>
+      {/* Center: Chat Window */}
+      <div className={`flex-1 flex flex-col bg-[#efeae2] relative ${mobileView === "chat" ? "flex" : "hidden md:flex"}`}>
+        {/* Chat Header with Navigation */}
+        {selectedChatId ? (
+             <div className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 shrink-0 shadow-sm">
+                <div className="flex items-center">
+                    <button onClick={handleBackToList} className="md:hidden mr-3 text-gray-600 hover:bg-gray-100 p-2 rounded-lg transition-colors">
+                        <FiArrowLeft size={20} />
+                    </button>
+                    <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                        <span className="text-indigo-600 font-semibold text-sm">{(currentChatData.title || "C").substring(0, 2).toUpperCase()}</span>
+                    </div>
+                    <div>
+                        <h2 className="font-semibold text-gray-900">{currentChatData.title || "Select a chat"}</h2>
+                        <p className="text-xs text-gray-500 truncate">{currentChatData.subtitle || "Click to view details"}</p>
+                    </div>
                 </div>
-              </div>
+                
+                
+                {/* Navigation Buttons */}
+                <div className="flex items-center gap-2">
+                    <button 
+                        onClick={() => router.push('/dashboard')}
+                        className="hidden md:flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                        title="Dashboard"
+                    >
+                        <MdDashboard className="text-base" />
+                        <span className="hidden lg:inline">Dashboard</span>
+                    </button>
+                    <button 
+                        onClick={() => router.push('/portfolio')}
+                        className="hidden md:flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                        title="Portfolio"
+                    >
+                        <MdWork className="text-base" />
+                        <span className="hidden lg:inline">Portfolio</span>
+                    </button>
+                    <button 
+                        onClick={() => router.push('/profile')}
+                        className="hidden md:flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                        title="Profile"
+                    >
+                        <MdPerson className="text-base" />
+                        <span className="hidden lg:inline">Profile</span>
+                    </button>
+                    <button 
+                        onClick={toggleSidebar} 
+                        className="flex items-center justify-center w-9 h-9 hover:bg-indigo-50 text-indigo-600 rounded-lg transition-colors" 
+                        title="Project Info"
+                    >
+                        <MdInfo className="text-lg" />
+                    </button>
+                </div>
+            </div>
+        ) : (
+            <div className="hidden md:flex h-16 bg-gray-50 border-b border-gray-200 items-center px-4"></div>
+        )}
+
+        {/* Chat Area */}
+        <div className="flex-1 relative overflow-hidden">
+            {selectedChatId ? (
+                <ChatWindow 
+                    chatId={selectedChatId} 
+                    chatMeta={currentChatData} 
+                    initialMessages={initialMessages}
+                />
+            ) : (
+                <div className="h-full flex flex-col items-center justify-center text-gray-500">
+                    <div className="w-64 h-64 bg-gray-200 rounded-full flex items-center justify-center mb-4 opacity-50">
+                        <span className="text-6xl">💬</span>
+                    </div>
+                    <p className="text-lg font-medium">Select a conversation to start chatting</p>
+                </div>
             )}
-          </div>
-
-          {/* Show chat window only when mobileShowChat true on mobile */}
-          <div className={`flex-1 ${mobileShowChat ? "block" : "hidden"} md:block`}>
-            <ChatWindow chatId={selectedChat} chatMeta={SAMPLE_CHATS.find(c => c.id === selectedChat) || {}} />
-          </div>
         </div>
+      </div>
 
-        {/* Right: Project Sidebar */}
-        <div className="w-80 border-l border-gray-200 bg-white hidden lg:flex flex-col">
-          <ProjectSidebar projectSlug={selectedChat} />
+      {/* Right: Project Sidebar (Info) */}
+      {selectedChatId && showSidebar && (
+        <div className={`${mobileView === "info" ? "flex" : "hidden"} lg:flex w-full lg:w-[350px] lg:min-w-[300px] flex-col border-l border-gray-200 bg-white z-10 transition-all duration-300`}>
+            <div className="h-16 bg-gray-50 border-b border-gray-200 flex items-center px-4 shrink-0">
+                <button onClick={() => setShowSidebar(false)} className="mr-3 text-gray-600 lg:hidden">
+                    <FiArrowLeft />
+                </button>
+                <h3 className="font-medium text-gray-900">Project Info</h3>
+            </div>
+            <ProjectSidebar projectSlug={selectedChatId} conversation={initialConversation} />
         </div>
-      </main>
+      )}
     </div>
   );
 }
 
 ChatLayout.propTypes = {
   projectSlug: PropTypes.string,
+  initialConversation: PropTypes.object,
+  initialMessages: PropTypes.array,
 };

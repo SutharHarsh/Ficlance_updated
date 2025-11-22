@@ -4,6 +4,14 @@ import "./globals.css"; // if you have a globals css
 import Nav from "@/components/layout/Navbar";
 import { useEffect } from "react";
 
+import { Poppins } from 'next/font/google';
+
+const poppins = Poppins({
+  weight: ['400', '700'], // You can specify different weights
+  subsets: ['latin'], // Required subset
+  display: 'swap', // Optional: control font loading behavior
+});
+
 export default function RootLayout({ children }) {
   // Centralized SEO data - edit these values for your site
   const siteName = "Ficlance";
@@ -26,7 +34,7 @@ export default function RootLayout({ children }) {
   }, []);
 
   return (
-    <html lang="en">
+    <html lang="en" className={poppins.className}>
       <head>
         {/* Primary meta tags */}
         <title>{title}</title>

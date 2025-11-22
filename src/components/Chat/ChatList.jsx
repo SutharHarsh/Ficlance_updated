@@ -26,45 +26,31 @@ export default function ChatList({ chats = [], selected, onSelect = () => {} }) 
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <div className="flex items-center justify-between px-4 py-3">
-          <h3 className="font-medium text-gray-700">Recent</h3>
-          <button className="text-primary text-sm font-medium">See all</button>
-        </div>
-
-        {filtered.map((c) => (
-          <div
-            key={c.id}
-            onClick={() => onSelect(c.id)}
-            className={`px-4 py-3 cursor-pointer ${selected === c.id ? "bg-blue-50 border-l-4 border-primary" : "hover:bg-gray-50"} ${c.unread ? "" : ""}`}
-          >
-            <div className="flex justify-between items-start mb-1">
-              <h4 className="font-medium text-gray-900">{c.title}</h4>
-              <span className="text-xs text-gray-500">{c.time}</span>
+        {filtered.length === 0 ? (
+            <div className="p-4 text-center text-gray-500 text-sm">No conversations found</div>
+        ) : (
+            filtered.map((c) => (
+            <div
+                key={c.id}
+                onClick={() => onSelect(c.id)}
+                className={`px-4 py-3 cursor-pointer border-b border-gray-100 flex items-center ${selected === c.id ? "bg-gray-100" : "hover:bg-gray-50"}`}
+            >
+                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mr-3 flex-shrink-0">
+                    <span className="text-gray-600 font-medium text-lg">{(c.title || "C").substring(0, 1).toUpperCase()}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-baseline mb-1">
+                        <h4 className="font-medium text-gray-900 truncate pr-2">{c.title}</h4>
+                        <span className="text-xs text-gray-500 flex-shrink-0">{c.time}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <p className="text-sm text-gray-600 truncate pr-2">{c.last}</p>
+                        {c.unread > 0 && <span className="bg-[#00a884] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">{c.unread}</span>}
+                    </div>
+                </div>
             </div>
-            <div className="flex justify-between items-start">
-              <p className="text-sm text-gray-600 truncate w-48">{c.last}</p>
-              {c.unread ? <span className="bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{c.unread}</span> : null}
-            </div>
-          </div>
-        ))}
-
-        <div className="flex items-center justify-between px-4 py-3 mt-2">
-          <h3 className="font-medium text-gray-700">Archived</h3>
-          <button className="text-primary text-sm font-medium">See all</button>
-        </div>
-
-        {/* archived sample */}
-        <div className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100">
-          <div className="flex justify-between items-start mb-1">
-            <h4 className="font-medium text-gray-900">SEO Optimization</h4>
-            <span className="text-xs text-gray-500">Jun 15</span>
-          </div>
-          <p className="text-sm text-gray-500 truncate">Project completed. Thank you for your excellent work!</p>
-        </div>
-      </div>
-
-      <div className="p-4 border-t">
-        <button className="w-full bg-primary text-white py-2 rounded-button flex items-center justify-center font-medium">➕ New Conversation</button>
+            ))
+        )}
       </div>
     </div>
   );

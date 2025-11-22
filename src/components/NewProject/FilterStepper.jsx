@@ -232,7 +232,7 @@ function StepConnector({ isComplete }) {
       <motion.div
         className="absolute left-0 top-0 h-full"
         variants={{
-          incomplete: { width: 0, backgroundColor: "transparent" },
+          incomplete: { width: 0, backgroundColor: "rgba(0,0,0,0)" },
           complete: { width: "100%", backgroundColor: "#2D3047" },
         }}
         initial={false}

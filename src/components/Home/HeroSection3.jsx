@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 import LogoLoop from "../LogoLoop";
 import {
@@ -46,6 +47,7 @@ const imageLogos = [
 ];
 
 const HeroSection3 = () => {
+  const router = useRouter();
   const CIRCULAR_TEXT =
     "We are the future of work • We are the future of work • We are the future of work";
 
@@ -65,8 +67,11 @@ const HeroSection3 = () => {
                 height={40}
                 priority
               />
-              <div className="flex gap-8 mr-10">
-                <button className="text-xl font-semibold hover:text-[#7529c6] transition-all duration-200 ease-in-out">
+              <div className="lg:hidden hidden flex gap-8 mr-10">
+                <button 
+                  onClick={() => router.push('/dashboard')}
+                  className="text-xl font-semibold hover:text-[#7529c6] transition-all duration-200 ease-in-out"
+                >
                   Start Simulation
                 </button>
                 <button className="rounded-3xl text-lg border-2 border-black bg-white hover:bg-[#FFA21F] hover:text-black hover:font-semibold transition-all duration-200 ease-linear px-10 py-1">
@@ -109,10 +114,10 @@ const HeroSection3 = () => {
 
             {/* HeroSection Text */}
             <div className="mt-12 lg:mt-[12vh] lg:ml-16 flex flex-col items-center lg:items-start gap-5">
-              <h1 className="font-extrabold text-center lg:text-left lg:text-[10vh] text-[40px] opacity-80 leading-[98%] tracking-[-0.01em]">
-                Join the <br />
-                Next Generation <br />
-                of Freelancers.
+              <h1 className=" text-center lg:text-left lg:text-[10vh] text-[40px] opacity-80 leading-[98%] tracking-[-0.01em]">
+                Your <span className="font-bold text-[#FFA21F]">Journey</span> from <br />
+                <span className="bg-gradient-to-b from-amber-500 to-amber-200 bg-clip-text text-transparent font-bold">Learner</span> to <span className="font-bold underline">Leader</span> <br />
+                starts here.
               </h1>
               <p className="text-[16px] text-center lg:text-left mx-2 sm:w-[450px] opacity-60">
                 Collaborate on simulated gigs, gain practical experience, and
@@ -120,10 +125,13 @@ const HeroSection3 = () => {
               </p>
 
               <div className="flex sm:flex-row flex-col gap-4">
-                <button className="bg-black cursor-pointer text-white px-8 py-3 rounded-full md:mr-4 w-60 sm:w-48">
+                <button 
+                  onClick={() => router.push('/dashboard')}
+                  className="bg-black cursor-pointer text-white px-8 py-3 rounded-full md:mr-4 w-60 sm:w-48 hover:bg-gray-800 transition-colors"
+                >
                   Get Started
                 </button>
-                <button className="border cursor-pointer border-black text-black px-8 py-3 rounded-full">
+                <button className="border cursor-pointer border-black text-black px-8 py-3 rounded-full hover:bg-gray-100 transition-colors">
                   Learn More
                 </button>
               </div>
@@ -144,7 +152,7 @@ const HeroSection3 = () => {
           </div>
 
           {/* Tablet/Mobile: Image inside the orange div */}
-          <div className="lg:hidden absolute bg-[#FFA21F] top-[70vh] sm:top-[420px] -z-10 w-[150%] -left-[20%] h-[350px] rounded-[50px] -rotate-[16deg] flex justify-center items-center">
+          <div className="lg:hidden absolute bg-[#FFA21F] top-[70vh] sm:top-[460px] -z-10 w-[150%] -left-[20%] h-[350px] rounded-[50px] -rotate-[16deg] flex justify-center items-center">
             <div className="mb-25 rotate-[16deg] mr-5 -mt-16">
               <Image
                 className="-ml-1 w-[425px] object-contain"

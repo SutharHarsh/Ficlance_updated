@@ -5,6 +5,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaCode, FaPlay } from "react-icons/fa";
 import ProjectCard from "./ProjectCard";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const projectsData = [
   {
@@ -118,6 +119,78 @@ const additionalProjects = [
     technologies: ["React", "Socket.io", "Node.js"],
     gradientColors: "from-violet-500 via-purple-500 to-indigo-600",
   },
+  {
+    id: 10,
+    title: "Portfolio Website Builder",
+    description:
+      "Create a customizable portfolio website builder with drag-and-drop components and theme selection.",
+    duration: "1 week",
+    difficulty: "Advanced",
+    difficultyLevel: 4,
+    estimatedHours: "22-28",
+    technologies: ["React", "Next.js", "Tailwind"],
+    gradientColors: "from-pink-500 via-rose-500 to-red-500",
+  },
+  {
+    id: 11,
+    title: "Recipe Sharing Platform",
+    description:
+      "Build a recipe sharing platform with user-generated content, ratings, and cooking timers.",
+    duration: "3-5 days",
+    difficulty: "Intermediate",
+    difficultyLevel: 3,
+    estimatedHours: "14-18",
+    technologies: ["React", "Firebase", "CSS"],
+    gradientColors: "from-orange-500 via-amber-500 to-yellow-500",
+  },
+  {
+    id: 12,
+    title: "Expense Tracker App",
+    description:
+      "Develop a personal finance tracker with budget planning, expense categorization, and visual reports.",
+    duration: "2-3 days",
+    difficulty: "Beginner",
+    difficultyLevel: 2,
+    estimatedHours: "8-12",
+    technologies: ["React", "Chart.js", "LocalStorage"],
+    gradientColors: "from-green-400 via-emerald-400 to-teal-400",
+  },
+  {
+    id: 13,
+    title: "Video Streaming Platform",
+    description:
+      "Create a video streaming platform with playlist management, comments, and user subscriptions.",
+    duration: "1 week+",
+    difficulty: "Advanced",
+    difficultyLevel: 5,
+    estimatedHours: "35-40",
+    technologies: ["React", "Node.js", "AWS"],
+    gradientColors: "from-red-600 via-pink-600 to-purple-600",
+  },
+  {
+    id: 14,
+    title: "Fitness Workout Planner",
+    description:
+      "Build a workout planning app with exercise library, progress tracking, and custom routines.",
+    duration: "3-5 days",
+    difficulty: "Intermediate",
+    difficultyLevel: 3,
+    estimatedHours: "12-16",
+    technologies: ["React", "MongoDB", "API"],
+    gradientColors: "from-blue-500 via-indigo-500 to-purple-500",
+  },
+  {
+    id: 15,
+    title: "E-learning Platform",
+    description:
+      "Develop an online learning platform with course management, quizzes, and progress tracking.",
+    duration: "1 week+",
+    difficulty: "Advanced",
+    difficultyLevel: 5,
+    estimatedHours: "30-35",
+    technologies: ["React", "Node.js", "PostgreSQL"],
+    gradientColors: "from-indigo-500 via-blue-500 to-cyan-500",
+  },
 ];
 
 
@@ -172,15 +245,27 @@ const projectMatchesFilters = (project, filters) => {
 };
 
 export default function ProjectSection({ filters = null }) {
-    const router = useRouter(); 
+  const router = useRouter(); 
+  const { data: session } = useSession();
   const [selectedProject, setSelectedProject] = useState(null);
   const [showAllProjects, setShowAllProjects] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(false);
 
   // combine lists
   const allProjects = useMemo(
     () => [...projectsData, ...additionalProjects],
     []
   );
+
+  // Show loading when filters change
+  useEffect(() => {
+    if (filters) {
+      setIsFiltering(true);
+      const timer = setTimeout(() => setIsFiltering(false), 600);
+      return () => clearTimeout(timer);
+    }
+  }, [filters]);
 
   // compute displayed projects based on filters
   const filteredProjects = useMemo(() => {
@@ -211,6 +296,69 @@ export default function ProjectSection({ filters = null }) {
 
   const handleLoadMore = () => {
     setShowAllProjects(true);
+  };
+
+  const handleStartSimulation = async () => {
+    if (!selectedProject) return;
+    if (!session) {
+      alert("Please sign in to start a simulation.");
+      return;
+    }
+
+    setIsLoading(true);
+    const project = allProjects.find((p) => p.id === selectedProject);
+
+    try {
+      // 1. Call requirements API
+      const payload = {
+        Expertise: filters?.difficulty || "Intermediate",
+        TechStack: filters?.skills || [],
+        Duration: filters?.duration || "3-5 days",
+        ProjectName: project.title,
+        Description: project.description,
+      };
+
+      const reqResponse = await fetch("/api/proxy/requirements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!reqResponse.ok) {
+        throw new Error("Failed to fetch requirements");
+      }
+
+      const reqData = await reqResponse.json();
+
+      // 2. Create Conversation
+      const convResponse = await fetch("/api/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: session.user.email, // Using email as userId for now, or session.user.id if available
+          projectId: project.id,
+          projectName: project.title,
+          duration: reqData.duration || project.duration,
+          requirements: reqData,
+          aiName: reqData.ai_name,
+        }),
+      });
+
+      if (!convResponse.ok) {
+        throw new Error("Failed to create conversation");
+      }
+
+      const convData = await convResponse.json();
+
+      // 3. Redirect to chat
+      router.push(`/chat/${convData.conversationId}`);
+
+    } catch (error) {
+      console.error("Error starting simulation:", error);
+      alert("An error occurred while starting the simulation. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -285,22 +433,49 @@ export default function ProjectSection({ filters = null }) {
 
             {/* CTA Button with Play Icon */}
             <button
-              className="group inline-flex items-center gap-2 px-6 py-2 bg-[#2D3047] text-white 
+              className={`group inline-flex items-center gap-2 px-6 py-2 text-white 
              text-sm sm:text-base font-semibold rounded-full 
-             hover:bg-[#1f2235] transition duration-200 shadow-md"
-              onClick={() => {
-                const project = allProjects.find(
-                  (p) => p.id === selectedProject
-                );
-                if (!project) return;
-
-                const slug = project.title.toLowerCase().replace(/\s+/g, "-");
-                router.push(`/client/${slug}`);
-              }}
+             transition duration-200 shadow-md disabled:opacity-70 disabled:cursor-not-allowed
+             ${isLoading ? "bg-gray-500" : "bg-[#2D3047] hover:bg-[#1f2235]"}`}
+              onClick={handleStartSimulation}
+              disabled={isLoading}
             >
-              <FaPlay className="text-xs group-hover:scale-110 transition-transform duration-200" />
-              Start Simulating
+              {isLoading ? (
+                <div className="flex items-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Initializing Simulation...</span>
+                </div>
+              ) : (
+                <>
+                  <FaPlay className="text-xs group-hover:scale-110 transition-transform duration-200" />
+                  Start Simulating
+                </>
+              )}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Full screen loading overlay for better feedback */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] flex items-center justify-center">
+            <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center animate-bounce-small">
+                <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <h3 className="text-lg font-semibold text-gray-900">Setting up your workspace...</h3>
+                <p className="text-sm text-gray-500 mt-2">Connecting to AI agents and preparing requirements.</p>
+            </div>
+        </div>
+      )}
+
+      {/* Filter loading popup */}
+      {isFiltering && (
+        <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white p-5 rounded-lg shadow-lg flex items-center gap-3">
+            <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-sm font-medium text-gray-700">Filtering projects...</p>
           </div>
         </div>
       )}
