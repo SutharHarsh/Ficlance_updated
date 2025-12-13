@@ -1,44 +1,18 @@
 "use client"; // required for components using hooks or browser APIs
 
-import {
-  FiFileText,
-  FiCheck,
-  FiMessageSquare,
-  FiAward,
-  FiCalendar,
-} from "react-icons/fi";
+import { recentActivities as activitiesData } from "@/data/dashboard";
 
-const activities = [
-  {
-    title: "Project Assigned",
-    subtitle: "E-commerce Dashboard",
-    description:
-      "You've been assigned to a new project as a frontend developer.",
-    timestamp: "Today, 10:30 AM",
-    icon: <FiFileText className="text-white text-xs" />,
-    bgColor: "bg-blue-500",
-  },
-  {
-    title: "Task Completed",
-    subtitle: "Mobile App UI",
-    description: "You've completed the navigation design for the fitness app.",
-    timestamp: "Yesterday, 3:45 PM",
-    icon: <FiCheck className="text-white text-xs" />,
-    bgColor: "bg-green-500",
-  },
-];
-
-const RecentActivities = () => {
+const RecentActivities = ({ items = activitiesData }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 lg:col-span-2">
       <h2 className="text-lg font-semibold text-gray-900 mb-6">
         Recent Activities
       </h2>
-      {activities.map((activity, index) => (
+      {items.map((activity, index) => (
         <div
           key={index}
           className={`relative pl-8 pb-6 border-l-2 border-gray-200 ${
-            index === activities.length - 1 ? "pb-0" : ""
+            index === items.length - 1 ? "pb-0" : ""
           }`}
         >
           {/* Icon Dot */}

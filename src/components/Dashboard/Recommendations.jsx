@@ -1,11 +1,7 @@
 "use client"; // if you're using Next.js App Router
 
-import { 
-  RiFolderAddLine, 
-  RiRoadMapLine, 
-  RiTeamLine, 
-  RiArrowRightLine 
-} from "react-icons/ri";
+import { RiArrowRightLine } from "react-icons/ri";
+import { recommendations as recommendationsData } from "@/data/dashboard";
 
 const RecommendationCard = ({ icon, iconBg, iconColor, title, description, buttonText }) => (
   <div className="p-4 border border-gray-100 rounded-lg hover:border-primary/20 hover:bg-primary/5 transition">
@@ -25,20 +21,16 @@ const RecommendationCard = ({ icon, iconBg, iconColor, title, description, butto
   </div>
 );
 
-const Recommendations = () => {
+const Recommendations = ({ items = recommendationsData }) => {
   return (
     <div className="grid grid-cols-1 p-8 rounded-2xl bg-white gap-4">
       <h2 className="text-lg font-semibold text-gray-900 mb-4">
         Recommended For You
       </h2>
 
-      <RecommendationCard
-        icon={<RiFolderAddLine className="text-green-600 text-lg" />}
-        iconBg="bg-green-100"
-        title="Try This Project Next"
-        description="Authentication System with OAuth - This project aligns with your backend development goals."
-        buttonText="View Project"
-      />
+      {items.map((item, index) => (
+        <RecommendationCard key={index} {...item} />
+      ))}
     </div>
   );
 };

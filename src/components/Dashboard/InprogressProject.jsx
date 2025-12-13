@@ -2,35 +2,10 @@
 import React from 'react';
 import Link from 'next/link';
 import ProjectCard from './ProjectCard';
-import {
-  RiLayout4Line,
-  RiDatabase2Line,
-  RiSmartphoneLine,
-  RiCodeSSlashLine,
-  RiArrowRightLine,
-} from 'react-icons/ri';
+import { RiArrowRightLine } from 'react-icons/ri';
+import { inProgressProjects } from '@/data/dashboard';
 
-const projectData = [
-  {
-    title: 'E-commerce Dashboard',
-    description:
-      'Design and implement a responsive admin dashboard for an e-commerce platform.',
-    icon: <RiLayout4Line />,
-    iconBg: 'bg-blue-100',
-    iconColor: 'text-blue-600',
-    priority: 'Medium',
-    priorityColor: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
-    progress: 65,
-    progressColor: 'bg-blue-500',
-    team: [
-      { initials: 'JD', bg: 'bg-indigo-500' },
-      { initials: 'MK', bg: 'bg-pink-500' },
-    ],
-    dueDate: 'Jul 15',
-  },
-];
-
-const InprogressProject = () => {
+const InprogressProject = ({ projects = inProgressProjects }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
       {/* Header with filters */}
@@ -56,7 +31,7 @@ const InprogressProject = () => {
 
       {/* Grid of project cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-        {projectData.map((project, index) => (
+        {projects.map((project, index) => (
           <ProjectCard key={index} {...project} />
         ))}
       </div>

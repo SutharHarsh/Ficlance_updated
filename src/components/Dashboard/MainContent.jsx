@@ -9,10 +9,7 @@ import MainGrid from "./MainGrid";
 import FilterStepper from "@/components/NewProject/FilterStepper";
 import WelcomeSection from "./WelcomeSection";
 import ProgressCard from "./ProgressCard";
-
-const dashboardCards = [
-  /* keep your existing cards array here (omitted for brevity) */
-];
+import { dashboardCards, welcomeInfo } from "@/data/dashboard";
 
 export default function MainContent() {
   const [filterModalOpen, setFilterModalOpen] = useState(false);
@@ -49,9 +46,9 @@ export default function MainContent() {
     <main className="flex-1 p-6 bg-gray-50">
       <div className="container mx-auto">
         <WelcomeSection
-          username="Aditya"
-          date="July 23, 2025"
-          day="Wednesday"
+          username={welcomeInfo.username}
+          date={welcomeInfo.date}
+          day={welcomeInfo.day}
           onOpenNewProject={openNewProjectStepper}
         />
 

@@ -4,12 +4,12 @@ import { AiOutlineCheck, AiFillStar } from "react-icons/ai";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 // Single reusable card
-const CompletedProjectCard = ({ title, date, rating }) => {
+const CompletedProjectCard = ({ title, date, rating, icon }) => {
   return (
     <div className="flex items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition">
       {/* Icon Section */}
       <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mr-4">
-        <AiOutlineCheck className="text-green-600 text-lg" />
+        {icon || <AiOutlineCheck className="text-green-600 text-lg" />}
       </div>
 
       {/* Title + Date */}

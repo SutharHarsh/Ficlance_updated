@@ -2,34 +2,12 @@
 
 import React from "react";
 import Link from "next/link";
-import {
-  RiDashboardLine,
-  RiFolderLine,
-  RiRoadMapLine,
-  RiToolsLine,
-  RiLineChartLine,
-  RiSettings4Line,
-} from "react-icons/ri";
-
-const navItems = [
-  { name: "Dashboard", icon: <RiDashboardLine />, href: "/dashboard", active: true },
-  { name: "Portfolio", icon: <RiFolderLine />, href: "/portfolio" },
-  // { name: "Learning Path", icon: <RiRoadMapLine />, href: "/learning" },
-  // { name: "Skills", icon: <RiToolsLine />, href: "/skills" },
-  // { name: "Analytics", icon: <RiLineChartLine />, href: "/analytics" },
-  { name: "Settings", icon: <RiSettings4Line />, href: "/settings" },
-];
-
-const recentProjects = [
-  { name: "E-commerce Redesign", color: "bg-green-500" },
-  { name: "API Integration", color: "bg-yellow-500" },
-  { name: "Mobile App UI", color: "bg-blue-500" },
-];
+import { navItems, recentProjects } from "@/data/dashboard";
 
 const Slider = () => {
   return (
     <aside className="w-64 bg-white shadow-sm hidden md:block h-[calc(100vh-72px)] sticky top-[72px] overflow-y-auto">
-      <nav className="p-4">
+      <nav className="p-4 flex flex-col h-full justify-between">
         <ul className="space-y-1">
           {navItems.map((item, index) => (
             <li key={index}>
@@ -61,7 +39,9 @@ const Slider = () => {
                   href="#"
                   className="flex items-center p-3 text-gray-700 hover:bg-gray-50 rounded-lg"
                 >
-                  <div className={`w-2 h-2 ${project.color} rounded-full mr-3`}></div>
+                  <div
+                    className={`w-2 h-2 ${project.color} rounded-full mr-3`}
+                  ></div>
                   {project.name}
                 </Link>
               </li>

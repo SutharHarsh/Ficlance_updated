@@ -7,34 +7,14 @@ import AchievementBadges from "./Achivement";
 import SkillsStatistics from "./SkillsStatistics";
 import RecentActivities from "./RecentActivities";
 import Recommendations from "./Recommendations";
-
-
-const completedProjects = [
-  {
-    title: "Landing Page Redesign",
-    date: "June 15, 2025",
-    rating: "4.8",
-  },
-];
-
-const deadlinesData = [
-  {
-    month: "JUL",
-    date: "08",
-    title: "API Integration",
-    description: "Payment gateway implementation",
-    priority: "High",
-  },
-];
-
-const skillsData = [
-  { name: "React.js", percent: 95 },
-  { name: "Node.js", percent: 70 },
-  { name: "UI/UX Design", percent: 75 },
-  { name: "Testing", percent: 80 },
-  { name: "API Design", percent: 85 },
-  { name: "TypeScript", percent: 65 },
-];
+import {
+  inProgressProjects,
+  completedProjects,
+  deadlines,
+  skills,
+  recentActivities,
+  recommendations,
+} from "@/data/dashboard";
 
 const MainGrid = () => {
   const handleViewAll = () => {
@@ -45,22 +25,22 @@ const MainGrid = () => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
       {/* Left section: Projects */}
       <div className="lg:col-span-2 space-y-6">
-        <InprogressProject />
+        <InprogressProject projects={inProgressProjects} />
         <CompletedProject
           projects={completedProjects}
           onViewAll={handleViewAll}
         />
-        <RecentActivities />
+        <RecentActivities items={recentActivities} />
       </div>
 
       {/* Right section: Deadlines, Skills, Achievements */}
       <div className="space-y-6">
-        <UpcomingDeadlines deadlines={deadlinesData} />
+        <UpcomingDeadlines deadlines={deadlines} />
         <div className="p-4 bg-white rounded-xl shadow-sm">
-          <SkillsStatistics skills={skillsData} />
+          <SkillsStatistics skills={skills} />
         </div>
         <AchievementBadges />
-        <Recommendations />
+        <Recommendations items={recommendations} />
       </div>
     </div>
   );
