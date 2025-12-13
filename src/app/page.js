@@ -25,7 +25,7 @@ export default function HomePage() {
       {/* <Integrations/> */}
       <PriceSection/>
       <FreelanceCTA/>
-      {/* <Testimonials/> */}
+      <Testimonials/>
       <Footer/>
     
     </div>

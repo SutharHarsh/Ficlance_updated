@@ -39,22 +39,6 @@ const Recommendations = () => {
         description="Authentication System with OAuth - This project aligns with your backend development goals."
         buttonText="View Project"
       />
-
-      <RecommendationCard
-        icon={<RiRoadMapLine className="text-purple-600 text-lg" />}
-        iconBg="bg-purple-100"
-        title="Advanced Frontend Path"
-        description="You're 70% ready for our Advanced Frontend Developer learning path. Complete 2 more projects to unlock."
-        buttonText="View Learning Path"
-      />
-
-      <RecommendationCard
-        icon={<RiTeamLine className="text-yellow-600 text-lg" />}
-        iconBg="bg-yellow-100"
-        title="Join a Team Project"
-        description="Collaborative E-commerce Platform - 3 developers are looking for a frontend specialist to join."
-        buttonText="Learn More"
-      />
     </div>
   );
 };

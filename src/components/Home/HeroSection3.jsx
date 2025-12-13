@@ -67,7 +67,7 @@ const HeroSection3 = () => {
                 height={40}
                 priority
               />
-              <div className="lg:hidden hidden flex gap-8 mr-10">
+              <div className="lg:flex hidden  gap-8 mr-10">
                 <button 
                   onClick={() => router.push('/dashboard')}
                   className="text-xl font-semibold hover:text-[#7529c6] transition-all duration-200 ease-in-out"

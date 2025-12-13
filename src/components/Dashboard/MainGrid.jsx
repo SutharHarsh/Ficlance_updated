@@ -5,6 +5,8 @@ import CompletedProject from "./CompletedProject";
 import UpcomingDeadlines from "./UpcomingDeadlines";
 import AchievementBadges from "./Achivement";
 import SkillsStatistics from "./SkillsStatistics";
+import RecentActivities from "./RecentActivities";
+import Recommendations from "./Recommendations";
 
 
 const completedProjects = [
@@ -12,16 +14,6 @@ const completedProjects = [
     title: "Landing Page Redesign",
     date: "June 15, 2025",
     rating: "4.8",
-  },
-  {
-    title: "User Authentication System",
-    date: "June 2, 2025",
-    rating: "4.9",
-  },
-  {
-    title: "Database Schema Design",
-    date: "May 28, 2025",
-    rating: "4.7",
   },
 ];
 
@@ -32,20 +24,6 @@ const deadlinesData = [
     title: "API Integration",
     description: "Payment gateway implementation",
     priority: "High",
-  },
-  {
-    month: "JUL",
-    date: "15",
-    title: "E-commerce Dashboard",
-    description: "Admin panel design & implementation",
-    priority: "Medium",
-  },
-  {
-    month: "JUL",
-    date: "22",
-    title: "Mobile App UI",
-    description: "Fitness app interface design",
-    priority: "Low",
   },
 ];
 
@@ -72,6 +50,7 @@ const MainGrid = () => {
           projects={completedProjects}
           onViewAll={handleViewAll}
         />
+        <RecentActivities />
       </div>
 
       {/* Right section: Deadlines, Skills, Achievements */}
@@ -81,6 +60,7 @@ const MainGrid = () => {
           <SkillsStatistics skills={skillsData} />
         </div>
         <AchievementBadges />
+        <Recommendations />
       </div>
     </div>
   );

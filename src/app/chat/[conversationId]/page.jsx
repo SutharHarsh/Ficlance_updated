@@ -26,17 +26,24 @@ async function getMessages(conversationId) {
   await connectToDatabase();
   const messages = await Message.find({ conversationId }).sort({ createdAt: 1 }).lean();
   
-  // Serialize dates
+  // Serialize dates and ensure sender is properly formatted
   return messages.map(msg => ({
     ...msg,
     _id: msg._id.toString(),
     conversationId: msg.conversationId.toString(),
+    sender: msg.sender ? {
+      userId: msg.sender.userId,
+      role: msg.sender.role
+    } : { userId: "unknown", role: "assistant" },
+    content: String(msg.content || ""),
+    type: msg.type || "text",
     createdAt: msg.createdAt.toISOString(),
     updatedAt: msg.updatedAt.toISOString(),
+    metadata: msg.metadata || null,
   }));
 }
 
-import ChatLayout from "@/components/Chat/ChatLayout";
+import ChatInterface from "@/components/Chat/ChatInterface";
 
 export default async function ChatPage({ params }) {
   const { conversationId } = params;
@@ -47,12 +54,18 @@ export default async function ChatPage({ params }) {
   }
 
   const messages = await getMessages(conversationId);
+  
+  // Extract client name from requirements if available
+  const clientName = conversation.requirements?.message?.client_name || "Client";
+  const projectName = conversation.projectName || "Untitled Project";
 
   return (
-    <ChatLayout 
-      projectSlug={conversationId} 
-      initialConversation={conversation}
+    <ChatInterface 
+      conversationId={conversationId} 
       initialMessages={messages}
+      clientName={clientName}
+      projectName={projectName}
+      conversation={conversation}
     />
   );
 }

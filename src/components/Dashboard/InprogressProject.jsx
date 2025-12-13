@@ -28,51 +28,6 @@ const projectData = [
     ],
     dueDate: 'Jul 15',
   },
-  {
-    title: 'API Integration',
-    description:
-      'Integrate payment gateway APIs and implement secure transaction processing.',
-    icon: <RiDatabase2Line />,
-    iconBg: 'bg-purple-100',
-    iconColor: 'text-purple-600',
-    priority: 'High',
-    priorityColor: { bg: 'bg-red-100', text: 'text-red-800' },
-    progress: 40,
-    progressColor: 'bg-purple-500',
-    team: [{ initials: 'TS', bg: 'bg-green-500' }],
-    dueDate: 'Jul 8',
-  },
-  {
-    title: 'Mobile App UI',
-    description:
-      'Design a clean and intuitive mobile app interface for a fitness tracking application.',
-    icon: <RiSmartphoneLine />,
-    iconBg: 'bg-green-100',
-    iconColor: 'text-green-600',
-    priority: 'Low',
-    priorityColor: { bg: 'bg-green-100', text: 'text-green-800' },
-    progress: 80,
-    progressColor: 'bg-green-500',
-    team: [
-      { initials: 'KL', bg: 'bg-orange-500' },
-      { initials: 'RN', bg: 'bg-blue-500' },
-    ],
-    dueDate: 'Jul 22',
-  },
-  {
-    title: 'Frontend Optimization',
-    description:
-      'Optimize website performance and implement responsive design improvements.',
-    icon: <RiCodeSSlashLine />,
-    iconBg: 'bg-red-100',
-    iconColor: 'text-red-600',
-    priority: 'Medium',
-    priorityColor: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
-    progress: 25,
-    progressColor: 'bg-red-500',
-    team: [{ initials: 'AW', bg: 'bg-indigo-500' }],
-    dueDate: 'Jul 30',
-  },
 ];
 
 const InprogressProject = () => {

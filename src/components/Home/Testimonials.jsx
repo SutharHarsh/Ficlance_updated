@@ -47,22 +47,6 @@ const Testimonials = () => {
       message:
         'Ficlance was the bridge I needed between learning to code and landing my first real clients. The simulated projects gave me confidence and real-world experience.',
     },
-    {
-      name: 'Ravi Iyer',
-      role: 'Backend Developer',
-      image: 'https://randomuser.me/api/portraits/men/75.jpg',
-      rating: 4.5,
-      message:
-        "As a self-taught developer, I struggled with imposter syndrome. Ficlance's real-life projects helped me feel ready for client work and build my confidence.",
-    },
-    {
-      name: 'Pooja Sharma',
-      role: 'UI/UX Designer',
-      image: 'https://randomuser.me/api/portraits/women/65.jpg',
-      rating: 5,
-      message:
-        'The UI/UX projects on Ficlance taught me how to present my work, handle feedback, and actually feel job-ready. I landed freelance gigs within 3 months!',
-    },
   ];
 
   return (

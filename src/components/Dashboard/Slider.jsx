@@ -13,10 +13,10 @@ import {
 
 const navItems = [
   { name: "Dashboard", icon: <RiDashboardLine />, href: "/dashboard", active: true },
-  { name: "My Projects", icon: <RiFolderLine />, href: "/projects" },
-  { name: "Learning Path", icon: <RiRoadMapLine />, href: "/learning" },
-  { name: "Skills", icon: <RiToolsLine />, href: "/skills" },
-  { name: "Analytics", icon: <RiLineChartLine />, href: "/analytics" },
+  { name: "Portfolio", icon: <RiFolderLine />, href: "/portfolio" },
+  // { name: "Learning Path", icon: <RiRoadMapLine />, href: "/learning" },
+  // { name: "Skills", icon: <RiToolsLine />, href: "/skills" },
+  // { name: "Analytics", icon: <RiLineChartLine />, href: "/analytics" },
   { name: "Settings", icon: <RiSettings4Line />, href: "/settings" },
 ];
 

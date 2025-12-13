@@ -26,33 +26,6 @@ const activities = [
     icon: <FiCheck className="text-white text-xs" />,
     bgColor: "bg-green-500",
   },
-  {
-    title: "Feedback Received",
-    subtitle: "API Integration",
-    description:
-      "Client requested additional security measures for the payment gateway.",
-    timestamp: "June 28, 2025, 11:20 AM",
-    icon: <FiMessageSquare className="text-white text-xs" />,
-    bgColor: "bg-yellow-500",
-  },
-  {
-    title: "Achievement Unlocked",
-    subtitle: "Team Player",
-    description:
-      "You've earned the Team Player badge for collaborating on 5+ projects.",
-    timestamp: "June 26, 2025, 9:15 AM",
-    icon: <FiAward className="text-white text-xs" />,
-    bgColor: "bg-purple-500",
-  },
-  {
-    title: "Deadline Updated",
-    subtitle: "Frontend Optimization",
-    description:
-      "Project deadline has been extended by 5 days due to scope changes.",
-    timestamp: "June 25, 2025, 2:30 PM",
-    icon: <FiCalendar className="text-white text-xs" />,
-    bgColor: "bg-red-500",
-  },
 ];
 
 const RecentActivities = () => {

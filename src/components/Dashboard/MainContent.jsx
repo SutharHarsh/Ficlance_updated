@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 // import WelcomeSection from "@/components/WelcomeSection";
 // import ProgressCard from "@/components/ProgressCard";
 import MainGrid from "./MainGrid";
-import BelowGrid from "./BelowGrid";
 import FilterStepper from "@/components/NewProject/FilterStepper";
 import WelcomeSection from "./WelcomeSection";
 import ProgressCard from "./ProgressCard";
@@ -66,7 +65,6 @@ export default function MainContent() {
       </div>
 
       <MainGrid />
-      <BelowGrid />
 
       {/* Stepper modal only (exactly what you asked) */}
       {filterModalOpen && (

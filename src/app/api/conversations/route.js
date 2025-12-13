@@ -66,12 +66,9 @@ export async function POST(req) {
     const reqData = requirements.message || {};
     const clientName = reqData.client_name || aiName || "Client";
     const projName = reqData.project_name || projectName;
-    const techStack = Array.isArray(reqData.tech_stack) ? reqData.tech_stack.join(", ") : reqData.tech_stack || "";
-    const dur = reqData.duration || duration;
-    const criteria = Array.isArray(reqData.acceptance_criteria) ? reqData.acceptance_criteria.join("\n") : reqData.acceptance_criteria || "";
 
-    const initialMessageContent = `Hey ... i am ${clientName} and i want to make the porject ${projName} using the ${techStack}
-in ${dur} and the requirments are : ${criteria} make sure they must be look perfect using the rich text editor`;
+      // Simple greeting message - all requirements are in the document
+      const initialMessageContent = `Hey ... I am ${clientName} and I want to make the project ${projName}. In the given document I have listed all the requirements for this project.`;
 
     const messages = [
       {
@@ -135,3 +132,41 @@ export async function GET(req) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
+export async function PATCH(req) {
+  try {
+    await connectToDatabase();
+    const body = await req.json();
+    const { conversationId, completionPercentage } = body;
+
+    if (!conversationId) {
+      return NextResponse.json({ error: "conversationId is required" }, { status: 400 });
+    }
+
+    // Update the conversation's requirements.message.completion_percentage
+    const conversation = await Conversation.findById(conversationId);
+    
+    if (!conversation) {
+      return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+    }
+
+    // Update the completion percentage in the requirements object
+    if (!conversation.requirements) {
+      conversation.requirements = { message: {} };
+    }
+    if (!conversation.requirements.message) {
+      conversation.requirements.message = {};
+    }
+    
+    conversation.requirements.message.completion_percentage = completionPercentage;
+    conversation.markModified('requirements');
+    
+    await conversation.save();
+
+    return NextResponse.json({ success: true, completionPercentage });
+  } catch (error) {
+    console.error("Error updating conversation:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+

@@ -1,4 +1,4 @@
-// components/NewProject/FilterStepper.jsx
+
 "use client";
 
 import React, { useState, Children, useRef, useLayoutEffect, useMemo, useEffect } from "react";

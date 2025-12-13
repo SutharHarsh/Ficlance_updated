@@ -22,7 +22,7 @@ export default function WelcomeSection({ username = "Alex", date = "June 29, 202
   );
 
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
+    <div className="flex flex-col md:flex-row items-start md:items-center justify-between ">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Welcome back, {username}!</h1>
         <p className="text-gray-600">{date} | {day}</p>

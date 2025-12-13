@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -38,10 +38,10 @@ const projectsData = [
     description:
       "Build a complete admin dashboard with data visualization, user management, and responsive layouts.",
     duration: "1 week+",
-    difficulty: "Advanced",
+    difficulty: "Beginner",
     difficultyLevel: 4,
     estimatedHours: "20-25",
-    technologies: ["React", "TypeScript", "Chart.js"],
+    technologies: ["React", "TailwindCSS"],
     gradientColors: "from-green-500 via-emerald-500 to-teal-500",
   },
   {
@@ -193,7 +193,6 @@ const additionalProjects = [
   },
 ];
 
-
 // const router = useRouter();
 
 const projectMatchesFilters = (project, filters) => {
@@ -245,7 +244,7 @@ const projectMatchesFilters = (project, filters) => {
 };
 
 export default function ProjectSection({ filters = null }) {
-  const router = useRouter(); 
+  const router = useRouter();
   const { data: session } = useSession();
   const [selectedProject, setSelectedProject] = useState(null);
   const [showAllProjects, setShowAllProjects] = useState(false);
@@ -352,10 +351,11 @@ export default function ProjectSection({ filters = null }) {
 
       // 3. Redirect to chat
       router.push(`/chat/${convData.conversationId}`);
-
     } catch (error) {
       console.error("Error starting simulation:", error);
-      alert("An error occurred while starting the simulation. Please try again.");
+      alert(
+        "An error occurred while starting the simulation. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -442,11 +442,27 @@ export default function ProjectSection({ filters = null }) {
             >
               {isLoading ? (
                 <div className="flex items-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>Initializing Simulation...</span>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  <span>Initializing Simulation...</span>
                 </div>
               ) : (
                 <>
@@ -462,11 +478,15 @@ export default function ProjectSection({ filters = null }) {
       {/* Full screen loading overlay for better feedback */}
       {isLoading && (
         <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] flex items-center justify-center">
-            <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center animate-bounce-small">
-                <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-                <h3 className="text-lg font-semibold text-gray-900">Setting up your workspace...</h3>
-                <p className="text-sm text-gray-500 mt-2">Connecting to AI agents and preparing requirements.</p>
-            </div>
+          <div className="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center animate-bounce-small">
+            <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Setting up your workspace...
+            </h3>
+            <p className="text-sm text-gray-500 mt-2">
+              Connecting to AI agents and preparing requirements.
+            </p>
+          </div>
         </div>
       )}
 
@@ -475,7 +495,9 @@ export default function ProjectSection({ filters = null }) {
         <div className="fixed inset-0 bg-black/10 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="bg-white p-5 rounded-lg shadow-lg flex items-center gap-3">
             <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-sm font-medium text-gray-700">Filtering projects...</p>
+            <p className="text-sm font-medium text-gray-700">
+              Filtering projects...
+            </p>
           </div>
         </div>
       )}

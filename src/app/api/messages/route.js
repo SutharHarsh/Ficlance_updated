@@ -7,7 +7,7 @@ export async function POST(req) {
   try {
     await connectToDatabase();
     const body = await req.json();
-    const { conversationId, content, userId, role } = body;
+    const { conversationId, content, userId, role, createdAt } = body;
 
     if (!conversationId || !content || !userId || !role) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -27,28 +27,43 @@ export async function POST(req) {
       return NextResponse.json({ error: "Conversation is closed" }, { status: 403 });
     }
 
-    // Save User Message
-    const userMessage = await Message.create({
+    // Save User Message with provided createdAt if available
+    const messageData = {
       conversationId,
       sender: { userId, role },
       content,
       type: "text",
-    });
+    };
+    
+    // Use provided createdAt to maintain proper ordering
+    if (createdAt) {
+      messageData.createdAt = new Date(createdAt);
+    }
+    
+    const userMessage = await Message.create(messageData);
 
     if (body.skipAI) {
         return NextResponse.json({ userMessage });
     }
 
-    // Trigger AI
-    const aiPayload = { Question: content };
+    // Get conversation to extract client name
+    const conv = await Conversation.findById(conversationId).lean();
+    const clientName = conv?.requirements?.message?.client_name || 
+                      conv?.participants?.find(p => p.role === "assistant")?.name || 
+                      "AI Assistant";
+
+    // Trigger AI with context
+    const aiPayload = { 
+      Question: content,
+      client_name: clientName,
+      conversationId: conversationId.toString()
+    };
     console.log("Sending to AI Agent:", JSON.stringify(aiPayload, null, 2));
 
     const aiResponse = await fetch(`${process.env.AGENT_URL || "http://127.0.0.1:8000"}/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        Question: content
-      }),
+      body: JSON.stringify(aiPayload),
     });
 
     if (!aiResponse.ok) {
@@ -60,10 +75,10 @@ export async function POST(req) {
     const aiData = await aiResponse.json();
     const aiReplyContent = aiData.response || aiData.message || JSON.stringify(aiData);
 
-    // Save AI Message
+    // Save AI Message with client name
     const aiMessage = await Message.create({
       conversationId,
-      sender: { userId: "ai-assistant", role: "assistant" },
+      sender: { userId: "ai-assistant", role: "assistant", name: clientName },
       content: aiReplyContent,
       type: "text",
     });
@@ -86,7 +101,7 @@ export async function GET(req) {
       return NextResponse.json({ error: "ConversationId is required" }, { status: 400 });
     }
 
-    const messages = await Message.find({ conversationId }).sort({ createdAt: 1 }).lean();
+    const messages = await Message.find({ conversationId }).sort({ createdAt: 1, _id: 1 }).lean();
     
     // Serialize
     const serializedMessages = messages.map(msg => ({

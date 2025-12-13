@@ -109,7 +109,7 @@ export default function GitHubFeedbackModal({ isOpen, onClose, onSubmit, isLoadi
             ) : (
               <>
                 <FaGithub className="text-sm" />
-                Analyze Repository
+                Submit Repo
               </>
             )}
           </button>
