@@ -1,10 +1,7 @@
 "use client";
 
-import React from "react";
-import { IoIosInformationCircle } from "react-icons/io";
-import { TfiMoreAlt } from "react-icons/tfi";
+import React, { useEffect, useState } from "react";
 import { TfiMenu } from "react-icons/tfi";
-import { IoCloseSharp } from "react-icons/io5";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 export default function ChatHeader({
@@ -12,15 +9,31 @@ export default function ChatHeader({
   isDetailsOpen,
   clientName = "Client",
   projectName = "Project",
+  isLoading = false,
 }) {
-  const getInitials = (name) => {
-    return name
+  const [showSkeleton, setShowSkeleton] = useState(true);
+  const [animateIn, setAnimateIn] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSkeleton(false);
+
+      // Trigger animation on next tick
+      requestAnimationFrame(() => {
+        setAnimateIn(true);
+      });
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const getInitials = (name) =>
+    name
       .split(" ")
-      .map((word) => word[0])
+      .map((w) => w[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
-  };
 
   const initials = getInitials(clientName);
 
@@ -40,11 +53,35 @@ export default function ChatHeader({
   ];
   const colorIndex = clientName.charCodeAt(0) % bgColors.length;
 
+  /* ---------------- SKELETON ---------------- */
+  if (showSkeleton || isLoading) {
+    return (
+      <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between animate-pulse">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="w-10 h-10 rounded-full bg-gray-200" />
+          <div>
+            <div className="h-4 bg-gray-200 rounded w-32 mb-2" />
+            <div className="h-3 bg-gray-200 rounded w-24" />
+          </div>
+        </div>
+        <div className="w-8 h-8 rounded-full bg-gray-200" />
+      </div>
+    );
+  }
+
+  /* ---------------- REAL CONTENT ---------------- */
   return (
-    <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between">
+    <div
+      className={`
+        bg-white border-b border-gray-200 px-4 py-2
+        flex items-center justify-between
+        transition-all duration-300 ease-out
+        ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
+      `}
+    >
       <div className="flex items-center gap-3 min-w-0 flex-1">
         <div
-          className={`w-10 h-10 rounded-full ${bgColors[colorIndex]} flex items-center justify-center flex-shrink-0`}
+          className={`w-10 h-10 rounded-full ${bgColors[colorIndex]} flex items-center justify-center`}
         >
           <span className={`${textColors[colorIndex]} font-semibold text-sm`}>
             {initials}
@@ -61,13 +98,13 @@ export default function ChatHeader({
 
       <button
         onClick={onInfoClick}
-        className={`p-2 rounded-full transition-colors ml-4 hover:bg-gray-100`}
-        title="Toggle project details"
+        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
       >
-        {/* <IoIosInformationCircle size={24} /> */}
-        {/* <TfiMoreAlt size={24}/> */}
-        {isDetailsOpen ? <TfiMenu size={20}/> : <BsThreeDotsVertical size={20} />}
-        
+        {isDetailsOpen ? (
+          <TfiMenu size={20} />
+        ) : (
+          <BsThreeDotsVertical size={20} />
+        )}
       </button>
     </div>
   );

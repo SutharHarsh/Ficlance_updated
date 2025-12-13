@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { io } from "socket.io-client";
 import Header from "./Header";
@@ -12,6 +12,44 @@ import { useMessages } from "@/hooks/useMessages";
 import { useGitHubFeedback } from "@/hooks/useGitHubFeedback";
 import { downloadDocument } from "@/utils/documentGenerator";
 import { FaGithub } from "react-icons/fa";
+
+// Skeletons for chat layout
+const SidebarSkeleton = () => (
+  <div className="hidden md:block w-64 border-r border-gray-200 bg-white p-4 animate-pulse">
+    <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+    <div className="space-y-3">
+      {[...Array(6)].map((_, i) => (
+        <div key={i} className="h-4 bg-gray-200 rounded w-full"></div>
+      ))}
+    </div>
+  </div>
+);
+
+const ChatAreaSkeleton = () => (
+  <div className="flex-1 flex flex-col bg-white border-x border-gray-200">
+    <div className="flex-1 p-4 space-y-4 animate-pulse">
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className={`flex ${i % 2 ? "justify-start" : "justify-end"}`}>
+          <div className={`max-w-md ${i % 2 ? "bg-gray-200" : "bg-gray-300"} h-6 rounded-lg w-3/4`}></div>
+        </div>
+      ))}
+    </div>
+    <div className="p-4 border-t border-gray-200">
+      <div className="h-10 bg-gray-200 rounded"></div>
+    </div>
+  </div>
+);
+
+const RightSidebarSkeleton = () => (
+  <div className="hidden lg:block w-80 bg-white border-l border-gray-200 p-4 animate-pulse">
+    <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
+    <div className="space-y-4">
+      <div className="h-24 bg-gray-200 rounded"></div>
+      <div className="h-20 bg-gray-200 rounded"></div>
+      <div className="h-28 bg-gray-200 rounded"></div>
+    </div>
+  </div>
+);
 
 export default function ChatInterface({
   conversationId,
@@ -31,6 +69,10 @@ export default function ChatInterface({
   const [techStack, setTechStack] = useState([]);
   const [difficulty, setDifficulty] = useState("");
   const [deadlineRaw, setDeadlineRaw] = useState(null);
+  const isDeadlinePassed = useMemo(() => {
+    if (!deadlineRaw) return false;
+    return new Date(deadlineRaw).getTime() < Date.now();
+  }, [deadlineRaw]);
 
   // Use custom hooks
   const {
@@ -169,21 +211,32 @@ export default function ChatInterface({
   };
 
   const sendMessage = async () => {
+    if (isDeadlinePassed) {
+      alert("Deadline has passed. Messaging is disabled for this project.");
+      return;
+    }
     await sendMessageHook(message, clientName);
     setMessage("");
   };
 
+  // Basic loading heuristic: show skeleton until we have any messages or conversation data
+  const isChatLoading = (!conversation && messages.length === 0) || (conversationId && messages.length === 0 && initialMessages.length === 0);
+
   return (
     <div className="h-screen flex flex-col bg-[#f9fafb]">
-      <Header />
+      <Header isLoading={isChatLoading} />
 
       <main className="flex-1 flex overflow-hidden relative">
         {/* LEFT SIDEBAR */}
-        <LeftSidebar
-          showLeftSidebar={showLeftSidebar}
-          setShowLeftSidebar={setShowLeftSidebar}
-          onConversationClick={handleConversationClick}
-        />
+        {isChatLoading ? (
+          <SidebarSkeleton />
+        ) : (
+          <LeftSidebar
+            showLeftSidebar={showLeftSidebar}
+            setShowLeftSidebar={setShowLeftSidebar}
+            onConversationClick={handleConversationClick}
+          />
+        )}
 
         {/* CHAT AREA */}
         <ChatArea
@@ -199,19 +252,26 @@ export default function ChatInterface({
           onInfoClick={() => setShowProjectDetails(!showProjectDetails)}
           isDetailsOpen={showProjectDetails}
           onGitHubClick={() => setShowGitHubModal(true)}
+          isLoading={isChatLoading}
+          isDeadlinePassed={isDeadlinePassed}
         />
 
         {/* RIGHT SIDEBAR */}
-        <RightSidebar
-          showProjectDetails={showProjectDetails}
-          setShowProjectDetails={setShowProjectDetails}
-          completionPercentage={completionPercentage}
-          dueDate={dueDate}
-          projectDescription={projectDescription}
-          techStack={techStack}
-          difficulty={difficulty}
-          deadline={deadlineRaw}
-        />
+        {isChatLoading ? (
+          <RightSidebarSkeleton />
+        ) : (
+          <RightSidebar
+            showProjectDetails={showProjectDetails}
+            setShowProjectDetails={setShowProjectDetails}
+            completionPercentage={completionPercentage}
+            dueDate={dueDate}
+            projectDescription={projectDescription}
+            techStack={techStack}
+            difficulty={difficulty}
+            deadline={deadlineRaw}
+            isLoading={isChatLoading}
+          />
+        )}
       </main>
 
       {/* GitHub Feedback Modal */}

@@ -22,4 +22,4 @@ const authOptions = {
 // ✅ In App Router, you must export handlers for GET and POST
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, authOptions };

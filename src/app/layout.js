@@ -2,6 +2,7 @@
 import Providers from "./providers";
 import "./globals.css"; // if you have a globals css
 import Nav from "@/components/layout/Navbar";
+import RouteLoadingBar from "@/components/shared/RouteLoadingBar";
 import { useEffect } from "react";
 
 import { Poppins } from 'next/font/google';
@@ -128,6 +129,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body>
+        <RouteLoadingBar />
         {/* <Nav /> */}
         {/* Quick debug link to NextAuth's built-in sign-in page */}
         {/* <a

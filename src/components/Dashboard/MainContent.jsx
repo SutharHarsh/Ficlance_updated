@@ -1,7 +1,7 @@
 // app/dashboard/MainContent.jsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 // import WelcomeSection from "@/components/WelcomeSection";
 // import ProgressCard from "@/components/ProgressCard";
@@ -11,9 +11,41 @@ import WelcomeSection from "./WelcomeSection";
 import ProgressCard from "./ProgressCard";
 import { dashboardCards, welcomeInfo } from "@/data/dashboard";
 
+// Skeleton Components
+const WelcomeSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="h-8 bg-gray-200 rounded w-1/3 mb-2"></div>
+    <div className="h-4 bg-gray-200 rounded w-1/4 mb-6"></div>
+  </div>
+);
+
+const ProgressCardSkeleton = () => (
+  <div className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
+    <div className="flex justify-between items-start mb-4">
+      <div className="flex-1">
+        <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+        <div className="h-6 bg-gray-200 rounded w-1/3"></div>
+      </div>
+      <div className="w-10 h-10 rounded-full bg-gray-200"></div>
+    </div>
+    <div className="w-full bg-gray-200 rounded-full h-2"></div>
+  </div>
+);
+
 export default function MainContent() {
   const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
+  // Simulate data loading from API
+  useEffect(() => {
+    // Replace this with actual API call when ready
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const openNewProjectStepper = () => setFilterModalOpen(true);
   const closeStepper = () => setFilterModalOpen(false);
@@ -45,23 +77,35 @@ export default function MainContent() {
   return (
     <main className="flex-1 p-6 bg-gray-50">
       <div className="container mx-auto">
-        <WelcomeSection
-          username={welcomeInfo.username}
-          date={welcomeInfo.date}
-          day={welcomeInfo.day}
-          onOpenNewProject={openNewProjectStepper}
-        />
+        {isLoading ? <WelcomeSkeleton /> : (
+          <div className="animate-fadeIn">
+            <WelcomeSection
+              username={welcomeInfo.username}
+              date={welcomeInfo.date}
+              day={welcomeInfo.day}
+              onOpenNewProject={openNewProjectStepper}
+            />
+          </div>
+        )}
 
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {dashboardCards.map((card, index) => (
-              <ProgressCard key={index} {...card} />
-            ))}
+            {isLoading
+              ? [...Array(4)].map((_, index) => (
+                  <ProgressCardSkeleton key={index} />
+                ))
+              : (
+                <div className="contents animate-fadeIn">
+                  {dashboardCards.map((card, index) => (
+                    <ProgressCard key={index} {...card} />
+                  ))}
+                </div>
+              )}
           </div>
         </div>
       </div>
 
-      <MainGrid />
+      <MainGrid isLoading={isLoading} />
 
       {/* Stepper modal only (exactly what you asked) */}
       {filterModalOpen && (

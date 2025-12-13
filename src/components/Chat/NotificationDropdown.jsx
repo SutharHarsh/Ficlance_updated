@@ -50,8 +50,15 @@ export default function NotificationDropdown() {
   };
 
   const getDeadlineStatus = (deadline) => {
-    if (!deadline) return { status: "none", color: "gray", bgClass: "bg-gray-500" };
-    
+    if (!deadline) {
+      return {
+        status: "none",
+        text: "No deadline",
+        bgClass: "bg-gray-400",
+        pillClass: "bg-gray-100 text-gray-600",
+      };
+    }
+
     const deadlineDate = new Date(deadline);
     const now = new Date();
     const diffMs = deadlineDate - now;
@@ -59,17 +66,41 @@ export default function NotificationDropdown() {
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
     if (diffMs < 0) {
-      return { status: "passed", color: "red", text: "Deadline passed", bgClass: "bg-red-500" };
-    } else if (diffHours < 24) {
-      return { status: "urgent", color: "red", text: `${diffHours}h remaining`, bgClass: "bg-red-500" };
-    } else if (diffDays <= 3) {
-      return { status: "soon", color: "orange", text: `${diffDays}d remaining`, bgClass: "bg-orange-500" };
-    } else {
-      return { status: "normal", color: "green", text: `${diffDays}d remaining`, bgClass: "bg-green-500" };
+      return {
+        status: "passed",
+        text: "Deadline passed",
+        bgClass: "bg-red-600",
+        pillClass: "bg-red-100 text-red-700",
+      };
     }
+
+    if (diffHours < 24) {
+      return {
+        status: "urgent",
+        text: `${diffHours}h remaining`,
+        bgClass: "bg-red-500",
+        pillClass: "bg-red-100 text-red-700",
+      };
+    }
+
+    if (diffDays <= 3) {
+      return {
+        status: "soon",
+        text: `${diffDays}d remaining`,
+        bgClass: "bg-orange-500",
+        pillClass: "bg-orange-100 text-orange-700",
+      };
+    }
+
+    return {
+      status: "normal",
+      text: `${diffDays}d remaining`,
+      bgClass: "bg-green-500",
+      pillClass: "bg-green-100 text-green-700",
+    };
   };
 
-  const urgentCount = notifications.filter(n => {
+  const urgentCount = notifications.filter((n) => {
     const status = getDeadlineStatus(n.deadline);
     return status.status === "passed" || status.status === "urgent";
   }).length;
@@ -129,9 +160,16 @@ export default function NotificationDropdown() {
                           <p className="font-medium text-sm text-gray-900 truncate">
                             {notif.projectName}
                           </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {deadlineInfo.text}
-                          </p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <p className="text-xs text-gray-600">
+                              {deadlineInfo.text}
+                            </p>
+                            {(deadlineInfo.status === "passed" || deadlineInfo.status === "urgent") && (
+                              <span className={`text-[10px] font-semibold px-2 py-1 rounded-full ${deadlineInfo.pillClass}`}>
+                                {deadlineInfo.status === "passed" ? "Deadline Passed" : "Near Deadline"}
+                              </span>
+                            )}
+                          </div>
                           {notif.deadline && (
                             <p className="text-xs text-gray-400 mt-1">
                               Due: {new Date(notif.deadline).toLocaleDateString('en-US', { 

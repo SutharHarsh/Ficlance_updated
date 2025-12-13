@@ -12,6 +12,7 @@ export default function RightSidebar({
   techStack,
   difficulty,
   deadline,
+  isLoading = false,
 }) {
   return (
     <>
@@ -31,6 +32,7 @@ export default function RightSidebar({
             techStack={techStack}
             difficulty={difficulty}
             deadline={deadline}
+            isLoading={isLoading}
           />
         )}
       </div>

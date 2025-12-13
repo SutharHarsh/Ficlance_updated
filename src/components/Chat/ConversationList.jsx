@@ -5,6 +5,21 @@ import { useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
 
+// Skeleton Loader Component
+const ConversationSkeleton = () => (
+  <div className="px-4 py-4 border-b border-gray-100 animate-pulse">
+    <div className="flex items-start justify-between gap-3">
+      <div className="flex-1 min-w-0">
+        <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+        <div className="h-4 bg-gray-200 rounded w-full"></div>
+      </div>
+      <div className="flex flex-col items-end gap-2 flex-shrink-0">
+        <div className="h-3 bg-gray-200 rounded w-12"></div>
+      </div>
+    </div>
+  </div>
+);
+
 export default function ConversationList({ onItemClick }) {
   const { data: session } = useSession();
   const router = useRouter();
@@ -159,8 +174,10 @@ export default function ConversationList({ onItemClick }) {
 
       <div className="flex-1 overflow-y-auto no-scrollbar">
         {loading ? (
-          <div className="text-center text-gray-500 text-sm py-8">
-            <p>Loading conversations...</p>
+          <div className="space-y-0">
+            {[...Array(5)].map((_, index) => (
+              <ConversationSkeleton key={index} />
+            ))}
           </div>
         ) : filteredConversations.length === 0 ? (
           <div className="text-center text-gray-500 text-sm py-8">

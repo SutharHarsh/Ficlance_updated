@@ -5,7 +5,21 @@ import NotificationDropdown from "./NotificationDropdown";
 import { MdSpaceDashboard } from "react-icons/md";
 import Image from "next/image";
 
-export default function Header() {
+export default function Header({ isLoading = false }) {
+  if (isLoading) {
+    return (
+      <header className="bg-white border-b border-gray-200 animate-pulse">
+        <div className="px-4 py-3 flex items-center justify-between">
+          <div className="h-6 w-24 bg-gray-200 rounded" />
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-gray-200 rounded-full" />
+            <div className="w-10 h-10 bg-gray-200 rounded-full" />
+            <div className="w-9 h-9 bg-gray-200 rounded-full" />
+          </div>
+        </div>
+      </header>
+    );
+  }
   return (
     <header className="bg-white border-b border-gray-200">
       <div className="px-4 py-3 flex items-center justify-between">

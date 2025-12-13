@@ -17,13 +17,20 @@ import MainContent from "@/components/Dashboard/MainContent";
 export default function DashboardPage() {
   const { data: session, status } = useSession();
 
-  if (status === "loading") return <p>Loading...</p>;
+  if (status === "loading") {
+    return (
+      <div className="flex bg-gray-100 min-h-screen">
+        <Slider isLoading={true} />
+        <MainContent/>
+      </div>
+    );
+  }
 
   if (!session) return <p>Not signed in</p>;
 
   return (
     <div className="flex bg-gray-100 min-h-screen">
-      <Slider/>
+      <Slider isLoading={false} />
       <MainContent/>
       {/* <h1>Welcome, {session.user?.name}</h1>
       <p>Email: {session.user?.email}</p> */}
