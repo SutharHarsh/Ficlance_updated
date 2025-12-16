@@ -15,7 +15,7 @@ import { FaGithub } from "react-icons/fa";
 
 // Skeletons for chat layout
 const SidebarSkeleton = () => (
-  <div className="hidden md:block w-64 border-r border-gray-200 bg-white p-4 animate-pulse">
+  <div className="hidden md:block w-64 border-r border-border bg-card p-4 animate-pulse">
     <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
     <div className="space-y-3">
       {[...Array(6)].map((_, i) => (
@@ -26,7 +26,7 @@ const SidebarSkeleton = () => (
 );
 
 const ChatAreaSkeleton = () => (
-  <div className="flex-1 flex flex-col bg-white border-x border-gray-200">
+  <div className="flex-1 flex flex-col bg-card border-x border-border">
     <div className="flex-1 p-4 space-y-4 animate-pulse">
       {[...Array(5)].map((_, i) => (
         <div key={i} className={`flex ${i % 2 ? "justify-start" : "justify-end"}`}>
@@ -34,22 +34,22 @@ const ChatAreaSkeleton = () => (
         </div>
       ))}
     </div>
-    <div className="p-4 border-t border-gray-200">
+    <div className="p-4 border-t border-border">
       <div className="h-10 bg-gray-200 rounded"></div>
     </div>
   </div>
 );
 
-const RightSidebarSkeleton = () => (
-  <div className="hidden lg:block w-80 bg-white border-l border-gray-200 p-4 animate-pulse">
-    <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
-    <div className="space-y-4">
-      <div className="h-24 bg-gray-200 rounded"></div>
-      <div className="h-20 bg-gray-200 rounded"></div>
-      <div className="h-28 bg-gray-200 rounded"></div>
-    </div>
-  </div>
-);
+// const RightSidebarSkeleton = () => (
+//   <div className="hidden lg:block w-80 bg-card border-l border-border p-4 animate-pulse">
+//     <div className="h-6 bg-card-foreground rounded w-1/2 mb-4"></div>
+//     <div className="space-y-4">
+//       <div className="h-24 bg-card-foreground rounded"></div>
+//       <div className="h-20 bg-card-foreground rounded"></div>
+//       <div className="h-28 bg-card-foreground rounded"></div>
+//     </div>
+//   </div>
+// );
 
 export default function ChatInterface({
   conversationId,
@@ -277,14 +277,14 @@ export default function ChatInterface({
       {/* GitHub Feedback Modal */}
       {showGitHubModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full transform transition-all">
+          <div className="bg-card rounded-lg shadow-xl max-w-md w-full transform transition-all">
             {feedbackLoading ? (
               <div className="p-6">
                 <div className="flex flex-col items-center">
                   <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-4">
                     <FaGithub className="text-indigo-600 text-2xl animate-pulse" />
                   </div>
-                  <p className="text-sm font-medium text-gray-900 mb-4 text-center">
+                  <p className="text-sm font-medium text-foreground mb-4 text-center">
                     {feedbackSteps[feedbackStep]}
                   </p>
                   <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden mb-3">

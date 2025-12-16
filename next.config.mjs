@@ -11,12 +11,22 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
-      // add more hosts if you need, for example:
-      // { protocol: "https", hostname: "images.example-cdn.com", pathname: "/**" },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
 
     // Alternative (simpler) option:
-    // domains: ["images.unsplash.com"],
+    // domains: ["images.unsplash.com", "lh3.googleusercontent.com", "avatars.githubusercontent.com"],
   },
 };
 

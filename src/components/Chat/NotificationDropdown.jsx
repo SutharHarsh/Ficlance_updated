@@ -36,21 +36,37 @@ export default function NotificationDropdown() {
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      // Fetch conversations with upcoming or passed deadlines
-      const res = await fetch("/api/conversations/deadlines");
+      // Fetch conversations with upcoming deadlines
+      const res = await fetch("/api/conversations/deadlines", { credentials: "same-origin" });
       if (res.ok) {
         const data = await res.json();
-        setNotifications(data);
+        // Normalize shape: ensure id, deadlineTimestamp, and deadline ISO for display
+        const normalized = Array.isArray(data)
+          ? data.map((item) => {
+              const ts = item.deadlineTimestamp || (item.deadline ? new Date(item.deadline).getTime() : null);
+              return {
+                ...item,
+                id: item.id || item._id,
+                _id: item.id || item._id,
+                deadline: ts ? new Date(ts).toISOString() : item.deadline,
+                deadlineTimestamp: ts,
+              };
+            })
+          : [];
+        setNotifications(normalized);
+      } else {
+        setNotifications([]);
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const getDeadlineStatus = (deadline) => {
-    if (!deadline) {
+  const getDeadlineStatus = (deadlineTimestampOrIso) => {
+    if (!deadlineTimestampOrIso) {
       return {
         status: "none",
         text: "No deadline",
@@ -59,7 +75,19 @@ export default function NotificationDropdown() {
       };
     }
 
-    const deadlineDate = new Date(deadline);
+    const ts = typeof deadlineTimestampOrIso === "number"
+      ? deadlineTimestampOrIso
+      : new Date(deadlineTimestampOrIso).getTime();
+    if (Number.isNaN(ts)) {
+      return {
+        status: "none",
+        text: "No deadline",
+        bgClass: "bg-gray-400",
+        pillClass: "bg-gray-100 text-gray-600",
+      };
+    }
+
+    const deadlineDate = new Date(ts);
     const now = new Date();
     const diffMs = deadlineDate - now;
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -101,7 +129,7 @@ export default function NotificationDropdown() {
   };
 
   const urgentCount = notifications.filter((n) => {
-    const status = getDeadlineStatus(n.deadline);
+    const status = getDeadlineStatus(n.deadlineTimestamp || n.deadline);
     return status.status === "passed" || status.status === "urgent";
   }).length;
 
@@ -110,7 +138,7 @@ export default function NotificationDropdown() {
         
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 hover:bg-gray-100 rounded-full transition-colors relative"
+        className="p-2 hover:bg-secondary rounded-full transition-colors relative"
       >
         <MdNotifications size={24}/>
         {/* <i className="ri-notification-3-line text-xl text-gray-700"></i> */}
@@ -120,10 +148,10 @@ export default function NotificationDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-96 overflow-hidden flex flex-col">
+        <div className="absolute right-0 mt-2 w-80 bg-card rounded-lg shadow-lg border border-border z-50 max-h-96 overflow-hidden flex flex-col">
           {/* Header */}
-          <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900">Notifications</h3>
+          <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+            <h3 className="font-semibold text-foreground">Notifications</h3>
             {urgentCount > 0 && (
               <span className="bg-red-100 text-red-600 text-xs font-semibold px-2 py-1 rounded-full">
                 {urgentCount} urgent
@@ -132,36 +160,44 @@ export default function NotificationDropdown() {
           </div>
 
           {/* Content */}
-          <div className="overflow-y-auto flex-1">
+          <div className="overflow-y-auto no-scrollbar flex-1">
             {loading ? (
-              <div className="p-8 text-center text-gray-500">
+              <div className="p-8 text-center text-low-foreground">
                 <i className="ri-loader-4-line animate-spin text-2xl mb-2"></i>
                 <p className="text-sm">Loading notifications...</p>
               </div>
             ) : notifications.length === 0 ? (
-              <div className="p-8 text-center text-gray-500">
+              <div className="p-8 text-center text-foreground">
                 <i className="ri-notification-off-line text-3xl mb-2"></i>
                 <p className="text-sm">No deadline notifications</p>
               </div>
             ) : (
               <div className="divide-y divide-gray-100">
                 {notifications.map((notif) => {
-                  const deadlineInfo = getDeadlineStatus(notif.deadline);
+                  const deadlineInfo = getDeadlineStatus(notif.deadlineTimestamp || notif.deadline);
+                  const projectTitle =
+                    notif.projectName ||
+                    notif.project ||
+                    notif.title ||
+                    notif.name ||
+                    notif.chatTitle ||
+                    notif.conversationTitle ||
+                    "Project";
                   return (
                     <a
-                      key={notif._id}
-                      href={`/chat/${notif._id}`}
-                      className="block px-4 py-3 hover:bg-gray-50 transition-colors"
+                      key={notif._id || notif.id}
+                      href={`/chat/${notif._id || notif.id}`}
+                      className="block px-4 py-3 hover:bg-card-foreground transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       <div className="flex items-start gap-3">
                         <div className={`mt-1 w-2 h-2 rounded-full ${deadlineInfo.bgClass} flex-shrink-0`}></div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm text-gray-900 truncate">
-                            {notif.projectName}
+                          <p className="font-semibold text-sm text-foreground truncate">
+                            {projectTitle}
                           </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <p className="text-xs text-gray-600">
+                          <div className="flex items-center gap-2 ">
+                            <p className="text-md text-foreground">
                               {deadlineInfo.text}
                             </p>
                             {(deadlineInfo.status === "passed" || deadlineInfo.status === "urgent") && (
@@ -170,9 +206,9 @@ export default function NotificationDropdown() {
                               </span>
                             )}
                           </div>
-                          {notif.deadline && (
+                          {(notif.deadlineTimestamp || notif.deadline) && (
                             <p className="text-xs text-gray-400 mt-1">
-                              Due: {new Date(notif.deadline).toLocaleDateString('en-US', { 
+                              Due: {new Date(notif.deadlineTimestamp || notif.deadline).toLocaleDateString('en-US', { 
                                 month: 'short', 
                                 day: 'numeric',
                                 hour: '2-digit',

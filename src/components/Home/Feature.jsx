@@ -59,7 +59,7 @@ const levels = [
 
 const Feature = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 mx-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center gap-12">
           {/* Left */}
@@ -82,7 +82,7 @@ const Feature = () => {
                 </li>
               ))}
             </ul>
-            <button className="bg-primary text-white px-8 py-3 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">
+            <button className="bg-gray-800 text-white hover:text-black px-8 py-3 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">
               View Learning Path
             </button>
           </div>

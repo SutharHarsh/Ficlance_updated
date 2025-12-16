@@ -56,15 +56,15 @@ export default function ChatHeader({
   /* ---------------- SKELETON ---------------- */
   if (showSkeleton || isLoading) {
     return (
-      <div className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between animate-pulse">
+      <div className="bg-card border-b border-border px-4 py-2 flex items-center justify-between animate-pulse">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="w-10 h-10 rounded-full bg-gray-200" />
+          <div className="w-10 h-10 rounded-full bg-card-foreground" />
           <div>
-            <div className="h-4 bg-gray-200 rounded w-32 mb-2" />
-            <div className="h-3 bg-gray-200 rounded w-24" />
+            <div className="h-4 bg-card-foreground rounded w-32 mb-2" />
+            <div className="h-3 bg-card-foreground rounded w-24" />
           </div>
         </div>
-        <div className="w-8 h-8 rounded-full bg-gray-200" />
+        <div className="w-8 h-8 rounded-full bg-card-foreground" />
       </div>
     );
   }
@@ -73,7 +73,7 @@ export default function ChatHeader({
   return (
     <div
       className={`
-        bg-white border-b border-gray-200 px-4 py-2
+        bg-card border-b border-border px-4 py-2
         flex items-center justify-between
         transition-all duration-300 ease-out
         ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
@@ -89,16 +89,16 @@ export default function ChatHeader({
         </div>
 
         <div className="min-w-0">
-          <h3 className="text-base font-semibold text-gray-900 truncate">
+          <h3 className="text-base font-semibold text-foreground truncate">
             {clientName}
           </h3>
-          <p className="text-xs text-gray-500 truncate">{projectName}</p>
+          <p className="text-xs text-low-foreground truncate">{projectName}</p>
         </div>
       </div>
 
       <button
         onClick={onInfoClick}
-        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+        className="p-2 rounded-full hover:bg-card-foreground transition-colors"
       >
         {isDetailsOpen ? (
           <TfiMenu size={20} />

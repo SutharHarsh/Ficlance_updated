@@ -4,6 +4,8 @@ import "./globals.css"; // if you have a globals css
 import Nav from "@/components/layout/Navbar";
 import RouteLoadingBar from "@/components/shared/RouteLoadingBar";
 import { useEffect } from "react";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { themeInitScript } from "@/lib/themeScript";
 
 import { Poppins } from 'next/font/google';
 
@@ -35,8 +37,13 @@ export default function RootLayout({ children }) {
   }, []);
 
   return (
-    <html lang="en" className={poppins.className}>
+    <html lang="en" className={poppins.className} suppressHydrationWarning>
       <head>
+        {/* CRITICAL: Prevent flash of wrong theme */}
+        <script
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
+        
         {/* Primary meta tags */}
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -129,27 +136,29 @@ export default function RootLayout({ children }) {
       </head>
 
       <body>
-        <RouteLoadingBar />
-        {/* <Nav /> */}
-        {/* Quick debug link to NextAuth's built-in sign-in page */}
-        {/* <a
-          href="/api/auth/signin"
-          style={{
-            position: "fixed",
-            right: 12,
-            top: 12,
-            zIndex: 9999,
-            background: "#0ea5a4",
-            color: "#fff",
-            padding: "6px 10px",
-            borderRadius: 6,
-            textDecoration: "none",
-            fontSize: 13,
-          }}
-        >
-          Sign in
-        </a> */}
-        <Providers>{children}</Providers>
+        <ThemeProvider>
+          <RouteLoadingBar />
+          {/* <Nav /> */}
+          {/* Quick debug link to NextAuth's built-in sign-in page */}
+          {/* <a
+            href="/api/auth/signin"
+            style={{
+              position: "fixed",
+              right: 12,
+              top: 12,
+              zIndex: 9999,
+              background: "#0ea5a4",
+              color: "#fff",
+              padding: "6px 10px",
+              borderRadius: 6,
+              textDecoration: "none",
+              fontSize: 13,
+            }}
+          >
+            Sign in
+          </a> */}
+          <Providers>{children}</Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

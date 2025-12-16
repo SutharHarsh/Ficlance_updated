@@ -95,7 +95,7 @@ export default function DeadlinePressureSlider({ value = 3, onChange = () => {} 
   const left = `calc(${((value - 1) / 4) * 100}% - 12px)`; // thumb left position
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8 hover:shadow-md transition-shadow duration-300">
+    <div className="bg-card rounded-2xl shadow-sm border border-gray-100 p-8 mb-8 hover:shadow-md transition-shadow duration-300">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">

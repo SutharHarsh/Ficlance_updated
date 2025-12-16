@@ -40,7 +40,7 @@ export default function MessageBubble({ message, renderMessageContent, formatTim
               </div>
               <button
                 onClick={() => onDownloadDocument?.(message)}
-                className="w-11 h-11 bg-white hover:bg-blue-600 border border-blue-200 hover:border-blue-600 rounded-lg flex items-center justify-center transition-all duration-200 flex-shrink-0 shadow-sm hover:shadow-md group-hover:scale-105"
+                className="w-11 h-11 bg-card hover:bg-blue-600 border border-blue-200 hover:border-blue-600 rounded-lg flex items-center justify-center transition-all duration-200 flex-shrink-0 shadow-sm hover:shadow-md group-hover:scale-105"
                 title="Download document"
               >
                 <FaDownload className="text-blue-600 group-hover:text-white text-base transition-colors" />
@@ -50,12 +50,12 @@ export default function MessageBubble({ message, renderMessageContent, formatTim
             <>
               <div className="text-gray-800">{text || message.content}</div>
               {hasDocumentAttachment && (
-                <div className="mt-4 flex items-center gap-4 p-4 bg-white rounded-xl border border-blue-200 shadow-md hover:shadow-lg transition-all duration-200 min-w-[320px] group">
+                <div className="mt-4 flex items-center gap-4 p-4 bg-card rounded-xl border border-blue-200 shadow-md hover:shadow-lg transition-all duration-200 min-w-[320px] group">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition-shadow">
                     <FaFileWord className="text-white text-2xl" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-gray-900 truncate leading-snug">
+                    <p className="text-sm font-bold text-foreground truncate leading-snug">
                       {message.metadata?.fileName || message.fileName || "Requirements.docx"}
                     </p>
                     <p className="text-xs text-gray-600 mt-1 font-medium">

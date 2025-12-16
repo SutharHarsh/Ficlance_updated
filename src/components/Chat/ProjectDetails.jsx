@@ -64,30 +64,30 @@ export default function ProjectDetails({
   /* 🔹 SKELETON (2s guaranteed) */
   if (showSkeleton) {
     return (
-      <div className="w-full h-full bg-white border-l border-gray-200 flex flex-col py-1 animate-pulse">
-        <div className="p-3 sm:p-4 border-b flex justify-between">
-          <div className="h-5 w-32 bg-gray-200 rounded" />
-          <div className="lg:hidden w-8 h-8 bg-gray-200 rounded-full" />
+      <div className="w-full h-full bg-card border-l border-border flex flex-col py-1">
+        <div className="p-3 sm:p-4 border-b flex justify-between animate-pulse">
+          <div className="h-5 w-32 bg-card-foreground rounded" />
+          <div className="lg:hidden w-8 h-8 bg-card-foreground rounded-full" />
         </div>
 
-        <div className="flex-1 p-4 space-y-6">
+        <div className="flex-1 p-4 space-y-6 animate-pulse">
           <div>
-            <div className="h-4 w-28 bg-gray-200 rounded mb-2" />
-            <div className="h-2 bg-gray-100 rounded-full" />
+            <div className="h-4 w-28 bg-card-foreground rounded mb-2" />
+            <div className="h-2 bg-card-foreground rounded-full" />
           </div>
 
           <div className="text-center">
-            <div className="h-7 w-32 bg-gray-300 rounded mx-auto" />
+            <div className="h-7 w-32 bg-card-foreground rounded mx-auto" />
           </div>
 
           <div className="space-y-2">
-            <div className="h-4 bg-gray-100 rounded w-full" />
-            <div className="h-4 bg-gray-100 rounded w-5/6" />
+            <div className="h-4 bg-card-foreground rounded w-full" />
+            <div className="h-4 bg-card-foreground rounded w-5/6" />
           </div>
 
           <div className="flex flex-wrap gap-2">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-6 w-16 bg-gray-100 rounded-full" />
+              <div key={i} className="h-6 w-16 bg-card-foreground rounded-full" />
             ))}
           </div>
         </div>
@@ -99,14 +99,14 @@ export default function ProjectDetails({
   return (
     <div
       className={`
-        w-full h-full bg-white border-l border-gray-200 flex flex-col py-1
+        w-full h-full bg-card border-l border-border flex flex-col py-1
         transition-all duration-300 ease-out
         ${animateIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
       `}
     >
       {/* Header */}
       <div className="p-3 sm:p-4 border-b flex justify-between">
-        <h3 className="text-sm sm:text-[20px] font-medium text-gray-900">
+        <h3 className="text-sm sm:text-[20px] font-medium text-foreground">
           Project Details
         </h3>
         <button
@@ -123,21 +123,21 @@ export default function ProjectDetails({
           <h4 className="text-xs sm:text-[15px] font-medium mb-2">
             Project Status
           </h4>
-          <div className="bg-gray-100 h-2 rounded-full">
+          <div className="dark:bg-card-foreground bg-foreground/10 h-2 rounded-full">
             <div
               className="bg-primary h-2 rounded-full transition-all duration-300"
               style={{ width: `${completionPercentage}%` }}
             />
           </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-low-foreground mt-1">
             <span>{completionPercentage}% Complete</span>
             <span>Due: {dueDate}</span>
           </div>
         </div>
 
         <div className="mb-6 text-center">
-          <div className="border bg-blue-50 px-4 py-3 rounded-lg">
-            <p className="text-sm font-semibold text-blue-700 mb-1">
+          <div className="border dark:bg-card-foreground bg-secondary px-4 py-3 rounded-lg">
+            <p className="text-sm font-semibold text-foreground mb-1">
               Deadline Timer
             </p>
             <p className="text-3xl font-semibold text-red-600">{timeLeft}</p>
@@ -149,7 +149,7 @@ export default function ProjectDetails({
             <h4 className="text-xs sm:text-[15px] font-medium mb-3">
               Project Description
             </h4>
-            <div className="bg-gray-100 rounded-lg p-4 text-sm">
+            <div className="dark:bg-card-foreground bg-secondary rounded-lg p-4 text-sm">
               {projectDescription}
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function ProjectDetails({
               {techStack.map((tech) => (
                 <span
                   key={tech}
-                  className="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full"
+                  className="dark:bg-card-foreground bg-secondary text-primary text-xs px-3 py-1 rounded-full"
                 >
                   {tech}
                 </span>
@@ -178,7 +178,7 @@ export default function ProjectDetails({
             <h4 className="text-xs sm:text-[15px] font-medium mb-2">
               Difficulty
             </h4>
-            <span className="px-3 py-1 rounded-full bg-gray-100 text-xs">
+            <span className="px-3 py-1 rounded-full dark:bg-card-foreground bg-secondary text-xs">
               {difficulty}
             </span>
           </div>

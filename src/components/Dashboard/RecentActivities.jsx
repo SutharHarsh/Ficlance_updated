@@ -4,8 +4,8 @@ import { recentActivities as activitiesData } from "@/data/dashboard";
 
 const RecentActivities = ({ items = activitiesData }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 lg:col-span-2">
-      <h2 className="text-lg font-semibold text-gray-900 mb-6">
+    <div className="bg-card rounded-xl shadow-sm p-6 lg:col-span-2">
+      <h2 className="text-lg font-semibold text-foreground mb-6">
         Recent Activities
       </h2>
       {items.map((activity, index) => (
@@ -24,13 +24,13 @@ const RecentActivities = ({ items = activitiesData }) => {
 
           {/* Activity Content */}
           <div className="mb-1">
-            <span className="font-medium text-gray-900">{activity.title}</span>
-            <span className="text-sm text-gray-500 ml-2">
+            <span className="font-medium text-foregroud">{activity.title}</span>
+            <span className="text-sm text-low-foreground ml-2">
               {activity.subtitle}
             </span>
           </div>
-          <p className="text-sm text-gray-600">{activity.description}</p>
-          <span className="text-xs text-gray-400 mt-1 block">
+          <p className="text-sm text-low-foreground">{activity.description}</p>
+          <span className="text-xs text-low-foreground mt-1 block">
             {activity.timestamp}
           </span>
         </div>

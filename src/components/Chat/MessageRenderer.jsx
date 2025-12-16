@@ -63,7 +63,7 @@ export default function MessageRenderer({
       const hasDocumentAttachment = msg.hasDocumentAttachment || msg.metadata?.hasDocument;
 
       if (!text)
-        return <span className="text-gray-400 italic">No message content</span>;
+        return <span className="text-low-foreground italic">No message content</span>;
 
       const parts = text.split(/(```[\s\S]*?```)/g);
 
@@ -76,7 +76,7 @@ export default function MessageRenderer({
             return (
               <pre
                 key={index}
-                className="bg-gray-800 text-gray-100 p-2 rounded my-2 overflow-x-auto text-xs font-mono"
+                className="bg-card-foreground text-foreground p-2 rounded my-2 overflow-x-auto text-xs font-mono"
               >
                 <code>{content}</code>
               </pre>
@@ -99,12 +99,12 @@ export default function MessageRenderer({
         return (
           <>
             {contentElements}
-            <div className="mt-4 flex items-center gap-4 p-4 bg-white rounded-xl border border-blue-200 hover:shadow-md transition-all duration-200 min-w-[320px] group cursor-pointer">
+            <div className="mt-4 flex items-center gap-4 p-4 bg-card rounded-xl border border-blue-200 hover:shadow-md transition-all duration-200 min-w-[320px] group cursor-pointer">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md group-hover:shadow-lg transition-shadow">
                 <FaFileWord className="text-white text-2xl" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-gray-900 truncate leading-snug">
+                <p className="text-sm font-bold text-foreground truncate leading-snug">
                   {msg.metadata?.fileName || msg.fileName || `${projectName}_Requirements.docx`}
                 </p>
                 <p className="text-xs text-gray-600 mt-1 font-medium">
@@ -137,19 +137,19 @@ export default function MessageRenderer({
   if (isDocument) {
     return (
       <div className="flex mb-4 px-2 sm:px-0">
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-green-100 flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
           <span className="text-green-600 font-medium text-xs">
             {clientInitials}
           </span>
         </div>
         <div className="max-w-[85%] sm:max-w-[75%]">
           <div className="mb-1">
-            <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 shadow-sm min-w-[280px]">
+            <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border shadow-sm min-w-[280px]">
               <div className="w-10 h-10 bg-blue-50 rounded flex items-center justify-center flex-shrink-0">
                 <FaFileWord className="text-blue-600 text-xl" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
+                <p className="text-sm font-medium text-foreground truncate">
                   {msg.fileName || msg.metadata?.fileName || `${projectName}_Requirements.docx`}
                 </p>
                 <p className="text-xs text-gray-500">
@@ -189,8 +189,8 @@ export default function MessageRenderer({
         <div
           className={`p-2 sm:p-3 mb-1 rounded-lg break-words ${
             isUser
-              ? "bg-primary text-white rounded-tr-none"
-              : "bg-gray-100 rounded-tl-none text-gray-800"
+              ? "bg-primary text-secondary rounded-tr-none"
+              : "bg-destructive-foreground dark:bg-card-foreground rounded-tl-none text-foreground"
           }`}
         >
           {renderMessageContent()}
@@ -203,8 +203,8 @@ export default function MessageRenderer({
       </div>
 
       {isUser && (
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-100 flex items-center justify-center ml-2 sm:ml-3 flex-shrink-0">
-          <span className="text-primary font-medium text-xs">JD</span>
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-accent/30 dark:bg-accent/60 flex items-center justify-center ml-2 sm:ml-3 flex-shrink-0">
+          <span className="text-foreground font-medium text-xs">JD</span>
         </div>
       )}
     </div>

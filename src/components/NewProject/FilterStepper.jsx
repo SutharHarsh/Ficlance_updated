@@ -339,12 +339,12 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-2xl bg-background rounded-2xl shadow-2xl overflow-hidden">
         {/* HEADER */}
-        <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-gray-50 to-white">
+        <div className="flex items-center justify-between px-6 py-4 border-b bg-gradient-to-r from-card to-card/10">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Filter Projects</h2>
-            <p className="text-sm text-gray-500 mt-0.5">Customize your project search</p>
+            <h2 className="text-xl font-bold text-foreground">Filter Projects</h2>
+            <p className="text-sm text-low-foreground mt-0.5">Customize your project search</p>
           </div>
 
           <button className="p-2 rounded-lg hover:bg-gray-100" onClick={onClose} aria-label="Close">
@@ -358,7 +358,7 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
             {/* STEP 1 – DIFFICULTY */}
             <Step>
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">Select Difficulty Level</h3>
+                <h3 className="text-lg font-semibold text-foreground">Select Difficulty Level</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {DIFFICULTIES.map((d) => {
                     const active = difficulty === d;
@@ -366,7 +366,7 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
                       <button
                         key={d}
                         onClick={() => setDifficulty(d)}
-                        className={`px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ${active ? "bg-[#2D3047] border-[#2D3047] text-yellow-400 shadow-lg" : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"}`}
+                        className={`px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ${active ? "bg-[#2D3047] border-[#2D3047] text-yellow-400 shadow-lg" : "dark:bg-foreground/10 border-gray-200 dark:border-card-foreground text-foreground hover:border-gray-300 dark:hover:border-gray-500"}`}
                       >
                         {d}
                       </button>
@@ -380,8 +380,8 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
             <Step>
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">Choose Technical Skills</h3>
-                  <p className="text-sm text-gray-600">Select technologies you want to work with</p>
+                  <h3 className="text-lg font-semibold text-foreground mb-1">Choose Technical Skills</h3>
+                  <p className="text-sm text-low-foreground">Select technologies you want to work with</p>
                 </div>
 
                 <div className="max-h-[280px] overflow-y-auto pr-2 custom-scrollbar space-y-3">
@@ -399,7 +399,7 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
                         <button
                           key={item.label}
                           onClick={() => toggleSkill(item.label)}
-                          className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${selected ? "bg-[#2D3047] border-[#2D3047] text-yellow-400" : item.type === "main" ? "bg-white border-gray-300 text-gray-800" : "bg-yellow-50 border-yellow-300 text-gray-800"}`}
+                          className={`px-4 py-2 mx-1 rounded-full text-sm font-medium border transition-all ${selected ? "bg-[#2D3047] border-[#2D3047] text-yellow-400" : item.type === "main" ? "bg-white dark:bg-card-foreground border-gray-300 dark:border-card dark:hover:bg-card-foreground/80 text-primary" : "bg-yellow-50 mx-1 border-yellow-300 text-gray-800"}`}
                         >
                           {item.label}
                         </button>
@@ -408,9 +408,9 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
                   })()}
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-                  <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Selected ({selectedSkills.length})</div>
-                  <div className="text-sm text-gray-900 font-medium">{selectedSkills.length ? selectedSkills.join(", ") : "No skills selected"}</div>
+                <div className="bg-gray-50 dark:bg-card rounded-lg p-3 border border-gray-200">
+                  <div className="text-xs font-semibold text-foreground uppercase tracking-wide mb-1">Selected ({selectedSkills.length})</div>
+                  <div className="text-sm text-low-foreground font-medium">{selectedSkills.length ? selectedSkills.join(", ") : "No skills selected"}</div>
                 </div>
               </div>
 
@@ -435,7 +435,7 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
             {/* STEP 3 – DURATION */}
             <Step>
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">Project Duration</h3>
+                <h3 className="text-lg font-semibold text-foreground">Project Duration</h3>
 
                 <div className="grid grid-cols-2 gap-3">
                   {DURATIONS.map((d) => {
@@ -444,7 +444,7 @@ export default function FilterStepper({ open = true, onClose, onApply = () => {}
                       <button
                         key={d}
                         onClick={() => setDuration(d)}
-                        className={`px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ${active ? "bg-[#2D3047] border-[#2D3047] text-yellow-400 shadow-lg" : "bg-white border-gray-200 text-gray-700 hover:border-gray-300"}`}
+                        className={`px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ${active ? "bg-[#2D3047] border-[#2D3047] text-yellow-400 shadow-lg" : "bg-white dark:bg-card-foreground border-gray-200 dark:border-card-foreground text-foreground dark:hover:border-gray-500 hover:border-gray-300"}`}
                       >
                         {d}
                       </button>

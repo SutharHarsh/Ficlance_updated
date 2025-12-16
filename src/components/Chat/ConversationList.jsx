@@ -7,14 +7,14 @@ import { FaSearch } from "react-icons/fa";
 
 // Skeleton Loader Component
 const ConversationSkeleton = () => (
-  <div className="px-4 py-4 border-b border-gray-100 animate-pulse">
+  <div className="px-4 py-4 border-b border-card-foreground animate-pulse">
     <div className="flex items-start justify-between gap-3">
       <div className="flex-1 min-w-0">
-        <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div className="h-4 bg-gray-200 rounded w-full"></div>
+        <div className="h-5 bg-card-foreground rounded w-3/4 mb-2"></div>
+        <div className="h-4 bg-card-foreground rounded w-full"></div>
       </div>
       <div className="flex flex-col items-end gap-2 flex-shrink-0">
-        <div className="h-3 bg-gray-200 rounded w-12"></div>
+        <div className="h-3 bg-card-foreground rounded w-12"></div>
       </div>
     </div>
   </div>
@@ -155,18 +155,18 @@ export default function ConversationList({ onItemClick }) {
   };
 
   return (
-    <div className="w-full h-full bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-3 sm:p-4 border-b border-gray-200 flex-shrink-0">
+    <div className="w-full h-full dark:bg-background bg-card border-r border-border flex flex-col">
+      <div className="p-3 sm:p-4 border-b border-border flex-shrink-0">
         <div className="relative">
           <input
             type="text"
             placeholder="Search conversations"
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full bg-gray-100 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full bg-input rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
 
-          <i className="ri-search-line absolute left-3 top-2.5 text-gray-500">
+          <i className="ri-search-line absolute left-3 top-2.5 text-foreground">
             <FaSearch />
           </i>
         </div>
@@ -180,7 +180,7 @@ export default function ConversationList({ onItemClick }) {
             ))}
           </div>
         ) : filteredConversations.length === 0 ? (
-          <div className="text-center text-gray-500 text-sm py-8">
+          <div className="text-center text-foreground text-sm py-8">
             <p>
               {searchQuery
                 ? "No conversations match your search"
@@ -196,10 +196,10 @@ export default function ConversationList({ onItemClick }) {
                 <div
                   key={conversation.id}
                   onClick={() => handleConversationClick(conversation.id)}
-                  className={`px-4 py-4 cursor-pointer transition-colors border-b border-gray-100 last:border-b-0 ${
+                  className={`px-4 py-4 cursor-pointer transition-colors border-b border-card-secondary last:border-b-0 ${
                     isActive
-                      ? "bg-blue-50 border-l-4 border-l-primary"
-                      : "hover:bg-gray-50"
+                      ? "bg-destructive-foreground dark:bg-card border-l-4 border-l-primary"
+                      : "hover:bg-secondary dark:hover:bg-card-foreground"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -207,7 +207,7 @@ export default function ConversationList({ onItemClick }) {
                       <div className="flex items-center justify-between mb-1">
                         <h4
                           className={`font-medium text-base truncate ${
-                            isActive ? "text-gray-900" : "text-gray-900"
+                            isActive ? "text-foreground font-medium" : "text-low-foreground"
                           }`}
                         >
                           {String(conversation.title || "Untitled Project")}
@@ -215,7 +215,7 @@ export default function ConversationList({ onItemClick }) {
                       </div>
                       <p
                         className={`text-sm truncate ${
-                          isActive ? "text-gray-600" : "text-gray-500"
+                          isActive ? "text-low-foreground" : "text-low-foreground"
                         }`}
                       >
                         {String(conversation.lastMessage || "No messages yet")}
@@ -224,7 +224,7 @@ export default function ConversationList({ onItemClick }) {
                     <div className="flex flex-col items-end gap-2 flex-shrink-0">
                       <span
                         className={`text-xs whitespace-nowrap ${
-                          isActive ? "text-gray-500" : "text-gray-400"
+                          isActive ? "text-low-foreground" : "text-low-foreground"
                         }`}
                       >
                         {conversation.time || "Today"}

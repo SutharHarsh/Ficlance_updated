@@ -12,21 +12,21 @@ const features = [
     title: 'AI-Generated Briefs',
     description:
       'Receive realistic project briefs tailored to your skill level and role. Each brief includes detailed requirements, timelines, and client expectations.',
-    icon: <RiFileTextLine className="text-primary text-2xl" />,
+    icon: <RiFileTextLine className="text-gray-700 text-2xl" />,
     bg: 'bg-blue-100',
   },
   {
     title: 'Simulated Client Interactions',
     description:
       'Practice communication with AI clients who respond to your questions, provide feedback, and request revisions—just like real clients would.',
-    icon: <RiMessage3Line className="text-primary text-2xl" />,
+    icon: <RiMessage3Line className="text-gray-700 text-2xl" />,
     bg: 'bg-purple-100',
   },
   {
     title: 'Portfolio Building',
     description:
       'Every completed project becomes part of your verified portfolio, complete with client reviews and communication snapshots that showcase your skills.',
-    icon: <RiGalleryLine className="text-primary text-2xl" />,
+    icon: <RiGalleryLine className="text-gray-700 text-2xl" />,
     bg: 'bg-green-100',
   },
 ];
@@ -38,7 +38,7 @@ const HowItWorksCard = ({ icon, title, description, bg }) => (
     </div>
     <h3 className="text-xl font-semibold text-gray-900 mb-3">{title}</h3>
     <p className="text-gray-600 mb-4">{description}</p>
-    <a href="#" className="text-primary font-medium flex items-center hover:underline">
+    <a href="#" className="text-accent font-medium flex items-center hover:underline">
       Learn More
       <RiArrowRightLine className="ml-1 w-5 h-5" />
     </a>
@@ -47,7 +47,7 @@ const HowItWorksCard = ({ icon, title, description, bg }) => (
 
 const HowItWorks = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 mx-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">How Ficlance Works</h2>

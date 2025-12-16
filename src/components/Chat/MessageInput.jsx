@@ -4,7 +4,13 @@ import React, { useState, useRef } from "react";
 import { FaGithub } from "react-icons/fa";
 import { RiSendPlaneFill } from "react-icons/ri";
 
-export default function MessageInput({ message, setMessage, onSend, isSending, onGitHubClick }) {
+export default function MessageInput({
+  message,
+  setMessage,
+  onSend,
+  isSending,
+  onGitHubClick,
+}) {
   const messageInputRef = useRef(null);
 
   const handleKeyDown = (e) => {
@@ -16,7 +22,7 @@ export default function MessageInput({ message, setMessage, onSend, isSending, o
 
   return (
     <div className="relative">
-      <div className="border border-gray-300 rounded-lg p-2 flex flex-col">
+      <div className="border dark:bg-card bg-card shadow-[0_-10px_50px_rgba(0,0,0,0.15)] dark:shadow-[0_-4px_14px_6px_rgba(0,0,0,0.6)] rounded-lg p-2 flex flex-col">
         <textarea
           ref={messageInputRef}
           value={message}
@@ -31,17 +37,17 @@ export default function MessageInput({ message, setMessage, onSend, isSending, o
             <button
               onClick={onGitHubClick}
               type="button"
-              className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600 transition-colors"
+              className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-card-foreground text-foreground transition-colors"
               title="GitHub Feedback"
             >
-              <FaGithub className="text-sm sm:text-base" size={24}/>
+              <FaGithub className="text-sm sm:text-base" size={24} />
             </button>
           </div>
 
           <button
             onClick={onSend}
             disabled={isSending}
-            className=" rounded-button text-sm sm:text-base flex items-center gap-2 hover:rotate-45 transition-all duration-200 ease-in-out hover:bg-gray-100 rounded-full p-2"
+            className=" rounded-button text-sm sm:text-base flex items-center gap-2 hover:rotate-45 transition-all duration-200 ease-in-out hover:bg-secondary dark:hover:bg-card-foreground hover:text-primary dark:hover:text-forground rounded-full p-2"
           >
             {isSending ? (
               <>
@@ -50,7 +56,7 @@ export default function MessageInput({ message, setMessage, onSend, isSending, o
               </>
             ) : (
               <>
-                <RiSendPlaneFill size={24}/>
+                <RiSendPlaneFill size={24} />
                 {/* <i className="ri-send-plane-fill"></i> */}
               </>
             )}

@@ -93,14 +93,30 @@ export async function GET(req) {
     await connectToDatabase();
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
+    const status = searchParams.get("status"); // 'active' or 'closed'
+    const limit = searchParams.get("limit"); // number of results
 
     if (!userId) {
       return NextResponse.json({ error: "UserId is required" }, { status: 400 });
     }
 
-    const conversations = await Conversation.find({
+    const query = {
       "participants.userId": userId
-    }).sort({ updatedAt: -1 }).lean();
+    };
+
+    // Filter by status if provided
+    if (status) {
+      query.status = status;
+    }
+
+    let conversationsQuery = Conversation.find(query).sort({ updatedAt: -1 });
+    
+    // Apply limit if provided
+    if (limit) {
+      conversationsQuery = conversationsQuery.limit(parseInt(limit));
+    }
+    
+    const conversations = await conversationsQuery.lean();
 
     // Enhance conversations with last message preview if needed
     // For now, just return the conversation details

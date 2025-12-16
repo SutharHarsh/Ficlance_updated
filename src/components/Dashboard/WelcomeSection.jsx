@@ -12,7 +12,7 @@ export default function WelcomeSection({ username = "Alex", date = "June 29, 202
       type="button"
       onClick={onOpenNewProject}
       aria-label="Open new project"
-      className="bg-[#2D3047] text-yellow-200 px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition flex items-center whitespace-nowrap"
+      className="bg-accent dark:bg-primary text-foreground dark:text-black dark:hover:text-white dark:hover:bg-accent hover:text-white px-4 py-2 rounded-lg font-medium hover:bg-foreground/90 transition flex items-center whitespace-nowrap"
     >
       <div className="w-5 h-5 flex items-center justify-center mr-2" aria-hidden>
         <RiAddLine />
@@ -24,13 +24,13 @@ export default function WelcomeSection({ username = "Alex", date = "June 29, 202
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between ">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Welcome back, {username}!</h1>
-        <p className="text-gray-600">{date} | {day}</p>
+        <h1 className="text-2xl font-bold text-foreground">Welcome back, {username}!</h1>
+        <p className="text-muted-foreground">{date} | {day}</p>
       </div>
 
       <div className="mt-4 md:mt-0 flex space-x-3">
         <button
-          className="bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition flex items-center whitespace-nowrap"
+          className="bg-card border border-border text-foreground px-4 py-2 rounded-lg font-medium hover:bg-secondary transition flex items-center whitespace-nowrap"
           type="button"
         >
           <div className="w-5 h-5 flex items-center justify-center mr-2" aria-hidden>

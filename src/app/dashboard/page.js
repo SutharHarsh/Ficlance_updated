@@ -1,39 +1,54 @@
 "use client";
 
-import Feature from "@/components/Home/Feature";
-import HeroSection2 from "@/components/Home/HeroSection2";
-import HowItWorks from "@/components/Home/HowItWorks";
-import RoleCards from "@/components/Home/RoleCards";
-import Integrations from "@/components/Home/Integrations";
-// import PageSection from "@/components/Home/PageSection";
 import { useSession } from "next-auth/react";
-import PriceSection from "@/components/Home/PriceSection";
-import FreelanceCTA from "@/components/Home/FreelanceCTA";
-import Testimonials from "@/components/Home/Testimonials";
-import Footer from "@/components/Home/Footer";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Slider from "@/components/Dashboard/Slider";
 import MainContent from "@/components/Dashboard/MainContent";
+import dashboardData from "@/data/dashboard";
+import { hasDashboardData } from "@/utils/dashboardHelper";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  // Check if user has data and redirect accordingly after login
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      const userHasData = hasDashboardData(dashboardData);
+
+      if (!userHasData) {
+        // User has no data - redirect to empty state
+        setIsRedirecting(true);
+        router.replace("/dashboard?empty=true");
+      }
+    }
+  }, [status, session, router]);
 
   if (status === "loading") {
     return (
-      <div className="flex bg-gray-100 min-h-screen">
+      <div className="flex bg-background min-h-screen">
         <Slider isLoading={true} />
-        <MainContent/>
+        <MainContent />
       </div>
     );
   }
 
   if (!session) return <p>Not signed in</p>;
 
+  if (isRedirecting) {
+    return (
+      <div className="flex bg-background min-h-screen items-center justify-center">
+        <p className="text-muted-foreground">Redirecting...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex bg-gray-100 min-h-screen">
+    <div className="flex bg-background min-h-screen">
       <Slider isLoading={false} />
-      <MainContent/>
-      {/* <h1>Welcome, {session.user?.name}</h1>
-      <p>Email: {session.user?.email}</p> */}
+      <MainContent />
     </div>
   );
 }

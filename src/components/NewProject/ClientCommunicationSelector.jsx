@@ -32,7 +32,7 @@ const communicationStyles = [
 
 export default function ClientCommunicationSelector({ selected, onChange }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+    <div className="bg-card rounded-xl shadow-sm border border-border p-6 mb-8">
       <h3 className="text-lg font-semibold text-gray-900 mb-2">
         Client Communication Style
       </h3>

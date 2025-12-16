@@ -14,6 +14,11 @@ import {
 // Register radar chart components (must be client-side)
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
+const cssVar = (name) =>
+  getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+
 // Radar chart sub-component
 const SkillsRadarChart = ({ skills }) => {
   const data = {
@@ -39,9 +44,9 @@ const SkillsRadarChart = ({ skills }) => {
         ticks: { display: false },
         pointLabels: {
           font: { size: 12 },
-          color: "#4B5563", // gray-700
+          color: `hsl(${cssVar("--foreground")})`, // gray-700
         },
-        grid: { color: "#E5E7EB" }, // gray-200
+        grid: { color: `hsl(${cssVar("--low-foreground")})` }, // gray-200
       },
     },
     plugins: {
@@ -57,8 +62,8 @@ const SkillsRadarChart = ({ skills }) => {
 // Main component
 const SkillsStatistics = ({ skills = [] }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-6 w-full max-w-sm">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">
+    <div className="bg-secondary dark:bg-card-foreground rounded-2xl shadow-sm p-6 w-full max-w-sm">
+      <h2 className="text-lg font-semibold text-foreground mb-4">
         Skills Statistics
       </h2>
 
@@ -72,8 +77,8 @@ const SkillsStatistics = ({ skills = [] }) => {
         {skills.map((skill, index) => (
           <div key={index}>
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-700">{skill.name}</span>
-              <span className="text-gray-700">{skill.percent}%</span>
+              <span className="text-foreground">{skill.name}</span>
+              <span className="text-foreground">{skill.percent}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div

@@ -9,7 +9,7 @@ const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header className="bg-card shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo and Hamburger */}
         <div className="flex items-center justify-between w-full md:w-auto">
@@ -69,7 +69,7 @@ const Nav = () => {
 
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white px-4 pb-4 shadow-md">
+        <div className="md:hidden bg-card px-4 pb-4 shadow-md">
           <nav className="flex flex-col space-y-2 mt-2">
             <Link
               href="/dashboard"

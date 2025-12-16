@@ -53,28 +53,29 @@ const HeroSection3 = () => {
 
   return (
     <>
-      <div className="overflow-x-hidden h-[1030px] sm:h-[1000px] lg:h-3/4">
+      <div className="overflow-x-hidden bg-white h-[1030px] sm:h-[1000px] lg:h-3/4">
         {/* Desktop & Laptop View */}
-        <div className="home-section lg:h-screen h-[1000px] overflow-hidden relative flex flex-col justify-center lg:flex-row lg:justify-end">
+        <div className="home-section z-0 lg:h-screen h-[1000px] overflow-hidden relative flex flex-col justify-center lg:flex-row lg:justify-end">
           <div className="flex-1">
             {/* FicLance Logo */}
             <div className="flex justify-between items-center mx-4 my-4">
               <Image
                 className="md:h-[30px] z-30 md:pl-12 h-[20px] w-auto"
-                src="/Logo1.png" // ✅ Public folder image reference
+                src="/Logo1.png"
                 alt="FicLance Logo"
-                width={120}
+                width={150}
                 height={40}
                 priority
+                quality={95}
               />
               <div className="lg:flex hidden  gap-8 mr-10">
-                <button 
-                  onClick={() => router.push('/dashboard')}
-                  className="text-xl font-semibold hover:text-[#7529c6] transition-all duration-200 ease-in-out"
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  className="text-xl font-semibold text-gray-800 hover:text-[#7529c6] transition-all duration-200 ease-in-out"
                 >
                   Start Simulation
                 </button>
-                <button className="rounded-3xl text-lg border-2 border-black bg-white hover:bg-[#FFA21F] hover:text-black hover:font-semibold transition-all duration-200 ease-linear px-10 py-1">
+                <button className="rounded-3xl text-lg text-gray-800 border-2 border-black bg-white hover:bg-[#FFA21F] hover:text-black hover:font-semibold transition-all duration-200 ease-linear px-10 py-1">
                   Login
                 </button>
               </div>
@@ -114,19 +115,23 @@ const HeroSection3 = () => {
 
             {/* HeroSection Text */}
             <div className="mt-12 lg:mt-[12vh] lg:ml-16 flex flex-col items-center lg:items-start gap-5">
-              <h1 className=" text-center lg:text-left lg:text-[10vh] text-[40px] opacity-80 leading-[98%] tracking-[-0.01em]">
-                Your <span className="font-bold text-[#FFA21F]">Journey</span> from <br />
-                <span className="bg-gradient-to-b from-amber-500 to-amber-200 bg-clip-text text-transparent font-bold">Learner</span> to <span className="font-bold underline">Leader</span> <br />
+              <h1 className=" text-center text-black lg:text-left lg:text-[10vh] text-[40px] opacity-80 leading-[98%] tracking-[-0.01em]">
+                Your <span className="font-bold text-[#FFA21F]">Journey</span>{" "}
+                from <br />
+                <span className="bg-gradient-to-b from-amber-500 to-amber-200 bg-clip-text text-transparent font-bold">
+                  Learner
+                </span>{" "}
+                to <span className="font-bold underline">Leader</span> <br />
                 starts here.
               </h1>
-              <p className="text-[16px] text-center lg:text-left mx-2 sm:w-[450px] opacity-60">
+              <p className="text-[16px] text-center text-gray-800 lg:text-left mx-2 sm:w-[450px] opacity-60">
                 Collaborate on simulated gigs, gain practical experience, and
                 grow your portfolio in a risk-free environment.
               </p>
 
               <div className="flex sm:flex-row flex-col gap-4">
-                <button 
-                  onClick={() => router.push('/dashboard')}
+                <button
+                  onClick={() => router.push("/dashboard")}
                   className="bg-black cursor-pointer text-white px-8 py-3 rounded-full md:mr-4 w-60 sm:w-48 hover:bg-gray-800 transition-colors"
                 >
                   Get Started
@@ -139,27 +144,32 @@ const HeroSection3 = () => {
           </div>
 
           {/* Desktop/Laptop: Image outside the orange div */}
-          <div className="hidden lg:block absolute bg-[#FFA21F] -z-10 w-full lg:h-screen rounded-[50px] lg:rounded-tr-[91px] lg:left-8 lg:top-[69%] -rotate-[16deg]">
-            <div className="hidden lg:flex absolute rotate-[17deg] -top-48 xl:-top-44 2xl:-top-52 right-0 lg:pr-10 xl:pr-16">
+          <div className="hidden lg:block absolute bg-[#FFA21F] z-0 w-full lg:h-screen rounded-[50px] lg:rounded-tr-[91px] lg:left-8 lg:top-[69%] -rotate-[16deg] ">
+            <div className="hidden lg:flex absolute rotate-[17deg] -top-48 xl:-top-44 2xl:-top-64 right-0 lg:pr-10 xl:pr-16 h-[600px]">
               <Image
-                className="lg:w-[28vw] xl:w-[30vw] object-contain"
+                className="object-contain lg:w-[28vw] xl:w-[30vw]"
                 src="/new_img.png"
                 alt="Freelancers Illustration"
-                width={500}
-                height={500}
+                width={800}
+                height={600}
+                // quality={100}
+                // priority
+                // unoptimized
               />
             </div>
           </div>
 
           {/* Tablet/Mobile: Image inside the orange div */}
-          <div className="lg:hidden absolute bg-[#FFA21F] top-[70vh] sm:top-[460px] -z-10 w-[150%] -left-[20%] h-[350px] rounded-[50px] -rotate-[16deg] flex justify-center items-center">
-            <div className="mb-25 rotate-[16deg] mr-5 -mt-16">
+          <div className="lg:hidden absolute bg-[#FFA21F] top-[70vh] sm:top-[460px] z-0 w-[150%] -left-[20%] h-[350px] rounded-[50px] -rotate-[16deg] flex justify-center items-center">
+            <div className="mb-25 rotate-[16deg] mr-5 -mt-16 relative w-[425px] h-[350px]">
               <Image
-                className="-ml-1 w-[425px] object-contain"
+                className="object-contain"
                 src="/new_img.png"
                 alt="Freelancers Illustration"
-                width={400}
-                height={400}
+                fill
+                quality={100}
+                priority
+                unoptimized
               />
             </div>
           </div>
@@ -168,7 +178,7 @@ const HeroSection3 = () => {
         {/* <div className="bg-[#FFA21F] h-10"></div> */}
         {/* Basic horizontal loop */}
         <LogoLoop
-          className="bg-gradient-to-b from-[#FFA21F] to-white bg-blend-lighten -mt-64 -rotate-[16deg] min-w-[1200px] -ml-10 md:-mt-[287px] md:-rotate-[16deg] lg:rotate-0 lg:mt-0 lg:w-full lg:ml-0 "
+          className="bg-gradient-to-b from-[#FFA21F] to-white text-black bg-blend-lighten -mt-64 -rotate-[16deg] min-w-[1200px] -ml-10 md:-mt-[287px] md:-rotate-[16deg] lg:rotate-0 lg:mt-0 lg:w-full lg:ml-0 "
           logos={techLogos}
           speed={100}
           direction="left"

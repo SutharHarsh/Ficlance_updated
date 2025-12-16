@@ -13,12 +13,12 @@ const ProgressCard = ({
   statChangeColor = 'text-green-500',
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 transition hover:shadow-md">
+    <div className="bg-card rounded-xl shadow-sm p-6 transition hover:shadow-md">
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
           <p className="text-gray-500 text-sm">{title}</p>
-          <h3 className="text-2xl font-bold text-gray-900">{value}</h3>
+          <h3 className="text-2xl font-bold text-foreground">{value}</h3>
         </div>
         <div
           className={`w-10 h-10 rounded-full ${iconBg} flex items-center justify-center text-lg`}

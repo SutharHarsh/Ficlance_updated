@@ -22,7 +22,7 @@ const plans = [
 
 const PriceSection = () => {
   return (
-    <section className="bg-white py-16 px-4 sm:px-6 lg:px-8" id="pricing">
+    <section className="bg-white py-16 mx-16 px-4 sm:px-6 lg:px-8" id="pricing">
       {/* Header */}
       <div className="max-w-7xl mx-auto text-center mb-12">
         <p className="text-gray-500 text-sm uppercase tracking-widest">

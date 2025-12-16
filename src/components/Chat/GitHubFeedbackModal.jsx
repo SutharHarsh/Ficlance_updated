@@ -49,7 +49,7 @@ export default function GitHubFeedbackModal({ isOpen, onClose, onSubmit, isLoadi
           <div className="w-9 h-9 bg-indigo-50 rounded-lg flex items-center justify-center">
             <FaGithub className="text-indigo-600 text-lg" />
           </div>
-          <h3 className="text-base font-semibold text-gray-900">GitHub Repository Analysis</h3>
+          <h3 className="text-base font-semibold text-foreground">GitHub Repository Analysis</h3>
         </div>
         <button
           onClick={handleClose}

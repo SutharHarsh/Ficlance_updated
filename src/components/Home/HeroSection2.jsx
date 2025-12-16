@@ -42,7 +42,7 @@ const HeroSection2 = () => {
       <section className="hero-section relative">
         <div className="container mx-auto px-4 py-24 w-full">
           <div className="hero-content max-w-2xl py-16 px-10 rounded-xl">
-            <h1 className="text-5xl font-bold text-gray-900 mb-4">
+            <h1 className="text-5xl font-bold text-foreground mb-4">
               Simulated Gigs. Real Growth.
             </h1>
             <p className="text-xl text-gray-700 mb-8">
@@ -52,7 +52,7 @@ const HeroSection2 = () => {
               <button className="bg-primary text-white px-8 py-3 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">
                 Try Free Demo
               </button>
-              <button className="bg-white text-primary border border-primary px-8 py-3 rounded-button font-medium hover:bg-gray-50 transition whitespace-nowrap">
+              <button className="bg-card text-primary border border-primary px-8 py-3 rounded-button font-medium hover:bg-gray-50 transition whitespace-nowrap">
                 View Projects
               </button>
             </div>

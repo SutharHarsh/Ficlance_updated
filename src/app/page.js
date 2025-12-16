@@ -4,7 +4,7 @@ import Feature from "@/components/Home/Feature";
 import HeroSection2 from "@/components/Home/HeroSection2";
 import HowItWorks from "@/components/Home/HowItWorks";
 import RoleCards from "@/components/Home/RoleCards";
-import {Integrations} from "@/components/Home/Integrations";
+import { Integrations } from "@/components/Home/Integrations";
 // import PageSection from "@/components/Home/PageSection";
 // import { useSession } from "next-auth/react";
 import PriceSection from "@/components/Home/PriceSection";
@@ -14,20 +14,18 @@ import Footer from "@/components/Home/Footer";
 import HeroSection3 from "@/components/Home/HeroSection3";
 
 export default function HomePage() {
-
   return (
-    <div>
+    <div className="bg-white">
       <HeroSection3 />
       {/* <HeroSection2/> */}
       {/* <RoleCards/> */}
-      <HowItWorks/>
-      <Feature/>
+      <HowItWorks />
+      <Feature />
       {/* <Integrations/> */}
-      <PriceSection/>
-      <FreelanceCTA/>
-      <Testimonials/>
-      <Footer/>
-    
+      <PriceSection />
+      <FreelanceCTA />
+      <Testimonials />
+      <Footer />
     </div>
   );
 }

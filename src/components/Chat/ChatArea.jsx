@@ -78,7 +78,7 @@ export default function ChatArea({
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col bg-white min-w-0">
+    <div className="flex-1 flex flex-col bg-background/95 min-w-0">
       <ChatHeader
         onInfoClick={onInfoClick}
         isDetailsOpen={isDetailsOpen}
@@ -107,11 +107,11 @@ export default function ChatArea({
               >
                 <div
                   className={`max-w-md ${
-                    i % 2 ? "bg-gray-100" : "bg-gray-200"
+                    i % 2 ? "bg-card-foreground" : "bg-card-foreground"
                   } rounded-2xl px-4 py-3 w-3/4`}
                 >
-                  <div className="h-4 bg-gray-300 rounded w-2/3 mb-2" />
-                  <div className="h-4 bg-gray-300 rounded w-1/2" />
+                  <div className="h-4 bg-card-foreground rounded w-2/3 mb-2" />
+                  <div className="h-4 bg-card-foreground rounded w-1/2" />
                 </div>
               </div>
             ))}
@@ -153,7 +153,7 @@ export default function ChatArea({
           </span>
         </div>
       ) : (
-        <div className="px-2 sm:px-4 py-3 border-t border-gray-200">
+        <div className="px-2 sm:px-4 pb-3 shadow-lg">
           <MessageInput
             message={message}
             setMessage={setMessage}
