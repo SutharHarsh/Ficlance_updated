@@ -1,13 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { User, Briefcase, Activity, Shield, Settings, Loader } from "lucide-react";
+import {
+  User,
+  Briefcase,
+  Activity,
+  Shield,
+  Settings,
+  Loader,
+  FolderOpen,
+  ArrowLeft,
+} from "lucide-react";
 import ProfileOverview from "@/components/Profile/ProfileOverview";
 import PersonalInfoForm from "@/components/Profile/PersonalInfoForm";
 import ProfessionalInfoForm from "@/components/Profile/ProfessionalInfoForm";
 import ActivityStats from "@/components/Profile/ActivityStats";
 import SecuritySettings from "@/components/Profile/SecuritySettings";
 import Preferences from "@/components/Profile/Preferences";
+import UserProjects from "@/components/Profile/UserProjects";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -51,8 +61,8 @@ export default function ProfilePage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          customAvatar: avatarUrl
-        })
+          customAvatar: avatarUrl,
+        }),
       });
 
       const data = await response.json();
@@ -71,17 +81,20 @@ export default function ProfilePage() {
   const tabs = [
     { id: "personal", label: "Personal Info", icon: User },
     { id: "professional", label: "Professional", icon: Briefcase },
+    { id: "projects", label: "My Projects", icon: FolderOpen },
     { id: "activity", label: "Activity", icon: Activity },
+    { id: "preferences", label: "Preferences", icon: Settings },
     { id: "security", label: "Security", icon: Shield },
-    { id: "preferences", label: "Preferences", icon: Settings }
   ];
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Loader size={48} className="animate-spin text-primary mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading your profile...</p>
+          <div className="w-12 h-12 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground font-medium">
+            Loading your profile...
+          </p>
         </div>
       </div>
     );
@@ -89,14 +102,30 @@ export default function ProfilePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Error Loading Profile</h2>
+          <div className="w-16 h-16 bg-red-50 dark:bg-red-950 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg
+              className="w-8 h-8 text-red-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">
+            Error Loading Profile
+          </h2>
           <p className="text-muted-foreground mb-6">{error}</p>
           <button
             onClick={fetchProfile}
-            className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm"
           >
             Try Again
           </button>
@@ -106,84 +135,119 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-card border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Profile</h1>
-              <p className="text-muted-foreground mt-1">Manage your account and preferences</p>
-            </div>
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/30 dark:from-blue-950/20 dark:via-purple-950/10 dark:to-pink-950/20">
+      {/* Animated gradient orbs for depth */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-gradient-to-br from-blue-400/20 to-purple-400/20 dark:from-blue-600/10 dark:to-purple-600/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-tl from-pink-400/20 to-purple-400/20 dark:from-pink-600/10 dark:to-purple-600/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+      <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-gradient-to-r from-purple-400/10 to-blue-400/10 dark:from-purple-600/5 dark:to-blue-600/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      
+      {/* Content layer */}
+      <div className="relative z-10">
+        {/* Minimalist Header with Breadcrumb */}
+        <div className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
             <a
               href="/dashboard"
-              className="px-4 py-2 text-foreground hover:bg-secondary rounded-lg transition-colors"
+              className="group flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Back to Dashboard
+              <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+              <span>Back</span>
             </a>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Profile Overview (Always visible) */}
-        <div className="mb-8">
-          <ProfileOverview profile={profile} onAvatarUpdate={handleAvatarUpdate} />
-        </div>
-
-        {/* Tabs Navigation */}
-        <div className="bg-card rounded-lg shadow-sm border border-border mb-6 overflow-hidden">
-          <div className="flex overflow-x-auto">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 min-w-max flex items-center justify-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${
-                    activeTab === tab.id
-                      ? "border-primary text-primary bg-primary/5"
-                      : "border-transparent text-muted-foreground hover:text-foreground hover:bg-secondary"
-                  }`}
-                >
-                  <Icon size={18} />
-                  <span className="hidden sm:inline">{tab.label}</span>
-                </button>
-              );
-            })}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Hero Profile Section - Redesigned with Glassmorphism */}
+        <div className="relative mb-16">
+          {/* Soft gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl blur-3xl -z-10" />
+          
+          <div className="relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 md:p-12 shadow-xl">
+            <ProfileOverview
+              profile={profile}
+              onAvatarUpdate={handleAvatarUpdate}
+            />
           </div>
         </div>
 
-        {/* Tab Content */}
-        <div className="space-y-6">
-          {activeTab === "personal" && (
-            <PersonalInfoForm profile={profile} onSave={handleProfileUpdate} />
-          )}
-          
-          {activeTab === "professional" && (
-            <ProfessionalInfoForm profile={profile} onSave={handleProfileUpdate} />
-          )}
-          
-          {activeTab === "activity" && (
-            <ActivityStats stats={profile.stats} />
-          )}
-          
-          {activeTab === "security" && (
-            <SecuritySettings profile={profile} />
-          )}
-          
-          {activeTab === "preferences" && (
-            <Preferences profile={profile} onSave={handleProfileUpdate} />
-          )}
+        {/* Product-Style Navigation */}
+        <div className="mb-12">
+          <nav className="relative">
+            {/* Floating tab bar */}
+            <div className="inline-flex items-center gap-1 p-1.5 bg-secondary/50 backdrop-blur-sm rounded-2xl border border-border/50 shadow-lg">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`
+                      relative flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200
+                      ${isActive 
+                        ? "bg-background text-foreground shadow-md" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                      }
+                    `}
+                  >
+                    <Icon size={16} className={isActive ? "text-primary" : ""} />
+                    <span className="hidden sm:inline whitespace-nowrap">{tab.label}</span>
+                    
+                    {/* Active indicator dot */}
+                    {isActive && (
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full animate-pulse" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
         </div>
 
-        {/* Footer Info */}
-        <div className="mt-12 text-center text-sm text-gray-500">
-          <p>Your data is secure and encrypted. We never share your personal information.</p>
-          <p className="mt-1">
-            Profile last updated: {new Date(profile.profileUpdatedAt || profile.createdAt).toLocaleString()}
-          </p>
+        {/* Content Area with Fade Transition */}
+        <div className="relative">
+          <div className="animate-in fade-in duration-300">
+            {activeTab === "personal" && (
+              <PersonalInfoForm profile={profile} onSave={handleProfileUpdate} />
+            )}
+
+            {activeTab === "professional" && (
+              <ProfessionalInfoForm
+                profile={profile}
+                onSave={handleProfileUpdate}
+              />
+            )}
+
+            {activeTab === "projects" && <UserProjects />}
+
+            {activeTab === "activity" && <ActivityStats stats={profile.stats} />}
+
+            {activeTab === "preferences" && (
+              <Preferences profile={profile} onSave={handleProfileUpdate} />
+            )}
+
+            {activeTab === "security" && <SecuritySettings profile={profile} />}
+          </div>
         </div>
+
+        {/* Refined Footer */}
+        <div className="mt-24 pt-12 border-t border-border/30">
+          <div className="text-center space-y-3">
+            <p className="text-sm text-muted-foreground/80">
+              Your data is secure and encrypted.
+            </p>
+            <p className="text-xs text-muted-foreground/60">
+              Last updated {new Date(profile.profileUpdatedAt || profile.createdAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </p>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   );

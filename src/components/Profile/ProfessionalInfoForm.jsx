@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Save, Loader, Check, X, Link as LinkIcon, Github, Globe, Linkedin } from "lucide-react";
+import {
+  Save,
+  Loader,
+  Check,
+  X,
+  Link as LinkIcon,
+  Github,
+  Globe,
+  Linkedin,
+} from "lucide-react";
 
 export default function ProfessionalInfoForm({ profile, onSave }) {
   const [formData, setFormData] = useState({
@@ -11,8 +20,8 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
     portfolioLinks: {
       github: "",
       website: "",
-      linkedin: ""
-    }
+      linkedin: "",
+    },
   });
 
   const [techStackInput, setTechStackInput] = useState("");
@@ -29,8 +38,8 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
         portfolioLinks: profile.portfolioLinks || {
           github: "",
           website: "",
-          linkedin: ""
-        }
+          linkedin: "",
+        },
       });
     }
   }, [profile]);
@@ -39,13 +48,16 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
     const newErrors = {};
 
     // Validate hours per week
-    if (formData.availability.hoursPerWeek < 0 || formData.availability.hoursPerWeek > 168) {
+    if (
+      formData.availability.hoursPerWeek < 0 ||
+      formData.availability.hoursPerWeek > 168
+    ) {
       newErrors.availability = "Hours per week must be between 0 and 168";
     }
 
     // Validate URLs
     const urlFields = ["github", "website", "linkedin"];
-    urlFields.forEach(field => {
+    urlFields.forEach((field) => {
       const url = formData.portfolioLinks[field];
       if (url && url.trim()) {
         try {
@@ -67,14 +79,14 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
 
   const handleAddTech = () => {
     const trimmedTech = techStackInput.trim();
-    
+
     if (!trimmedTech) return;
-    
+
     if (formData.preferredTechStack.includes(trimmedTech)) {
       setErrors({ ...errors, techStack: "Technology already added" });
       return;
     }
-    
+
     if (formData.preferredTechStack.length >= 15) {
       setErrors({ ...errors, techStack: "Maximum 15 technologies allowed" });
       return;
@@ -82,7 +94,7 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
 
     setFormData({
       ...formData,
-      preferredTechStack: [...formData.preferredTechStack, trimmedTech]
+      preferredTechStack: [...formData.preferredTechStack, trimmedTech],
     });
     setTechStackInput("");
     setErrors({ ...errors, techStack: null });
@@ -91,7 +103,9 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
   const handleRemoveTech = (techToRemove) => {
     setFormData({
       ...formData,
-      preferredTechStack: formData.preferredTechStack.filter(tech => tech !== techToRemove)
+      preferredTechStack: formData.preferredTechStack.filter(
+        (tech) => tech !== techToRemove
+      ),
     });
   };
 
@@ -108,8 +122,8 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          professional: formData
-        })
+          professional: formData,
+        }),
       });
 
       const data = await response.json();
@@ -132,117 +146,157 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
   };
 
   return (
-    <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground">Professional Details</h2>
-        <p className="text-sm text-muted-foreground mt-1">
+    <div className="bg-card rounded-xl border border-border p-8">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-foreground">
+          Professional Details
+        </h2>
+        <p className="text-sm text-muted-foreground mt-2">
           Share your career goals and technical expertise
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Preferred Tech Stack */}
-        <div>
-          <label htmlFor="tech-input" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-2">
+          <label
+            htmlFor="tech-input"
+            className="block text-sm font-semibold text-foreground"
+          >
             Preferred Tech Stack
           </label>
-          <div className="flex gap-2 mb-3">
+          <p className="text-xs text-muted-foreground">
+            Technologies you work with and want to specialize in
+          </p>
+          <div className="flex gap-2">
             <input
               id="tech-input"
               type="text"
               value={techStackInput}
               onChange={(e) => setTechStackInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTech())}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              onKeyPress={(e) =>
+                e.key === "Enter" && (e.preventDefault(), handleAddTech())
+              }
+              className="flex-1 px-4 py-3 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all"
               placeholder="e.g., Next.js, TypeScript, MongoDB"
             />
             <button
               type="button"
               onClick={handleAddTech}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 bg-secondary border border-border text-foreground rounded-lg hover:bg-secondary/80 transition-colors font-medium text-sm"
             >
               Add
             </button>
           </div>
-          
-          <div className="flex flex-wrap gap-2">
-            {formData.preferredTechStack.map((tech, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center gap-2 px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm"
-              >
-                {tech}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveTech(tech)}
-                  className="hover:text-purple-900"
+
+          {formData.preferredTechStack.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-4">
+              {formData.preferredTechStack.map((tech, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-50 dark:bg-purple-950 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-400 rounded-full text-sm font-medium group hover:bg-purple-100 dark:hover:bg-purple-900 transition-colors"
                 >
-                  <X size={14} />
-                </button>
-              </span>
-            ))}
-          </div>
-          
+                  {tech}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTech(tech)}
+                    className="opacity-60 hover:opacity-100 transition-opacity"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
           {errors.techStack && (
             <p className="text-red-500 text-sm mt-2">{errors.techStack}</p>
           )}
-          <p className="text-gray-500 text-xs mt-2">
-            {formData.preferredTechStack.length}/15 technologies added
+          <p className="text-xs text-muted-foreground mt-2">
+            {formData.preferredTechStack.length}/15 technologies
           </p>
         </div>
 
         {/* Career Goal */}
-        <div>
-          <label htmlFor="career-goal" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-2">
+          <label
+            htmlFor="career-goal"
+            className="block text-sm font-semibold text-foreground"
+          >
             Career Goal
           </label>
+          <p className="text-xs text-muted-foreground">
+            What's your primary career objective?
+          </p>
           <select
             id="career-goal"
             value={formData.careerGoal}
-            onChange={(e) => setFormData({ ...formData, careerGoal: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            onChange={(e) =>
+              setFormData({ ...formData, careerGoal: e.target.value })
+            }
+            className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all"
           >
-            <option value="learning">Learning & Skill Development</option>
-            <option value="job">Looking for a Job</option>
-            <option value="freelancing">Pursuing Freelancing</option>
+            <option value="learning">Learning & Development</option>
+            <option value="freelancing">Freelancing</option>
+            <option value="job">Full-Time Employment</option>
             <option value="other">Other</option>
           </select>
         </div>
 
         {/* Availability */}
-        <div>
-          <label htmlFor="hours" className="block text-sm font-medium text-gray-700 mb-2">
-            Availability (hours per week)
+        <div className="space-y-2">
+          <label
+            htmlFor="hours-per-week"
+            className="block text-sm font-semibold text-foreground"
+          >
+            Availability
           </label>
-          <input
-            id="hours"
-            type="number"
-            min="0"
-            max="168"
-            value={formData.availability.hoursPerWeek}
-            onChange={(e) => setFormData({
-              ...formData,
-              availability: { hoursPerWeek: parseInt(e.target.value) || 0 }
-            })}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
-              errors.availability ? "border-red-500" : "border-gray-300"
-            }`}
-          />
+          <p className="text-xs text-muted-foreground">
+            How many hours per week can you dedicate?
+          </p>
+          <div className="relative">
+            <input
+              id="hours-per-week"
+              type="number"
+              min="0"
+              max="168"
+              value={formData.availability.hoursPerWeek}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  availability: { hoursPerWeek: parseInt(e.target.value) || 0 },
+                })
+              }
+              className={`w-full px-4 py-3 bg-secondary border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all ${
+                errors.availability ? "border-red-500" : "border-border"
+              }`}
+            />
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-medium">
+              hrs/week
+            </span>
+          </div>
           {errors.availability && (
             <p className="text-red-500 text-sm mt-1">{errors.availability}</p>
           )}
-          <p className="text-gray-500 text-xs mt-1">
-            How many hours per week can you dedicate to projects?
-          </p>
         </div>
 
         {/* Portfolio Links */}
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-gray-700">Portfolio Links</h3>
-          
-          {/* GitHub */}
           <div>
-            <label htmlFor="github" className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+            <label className="block text-sm font-semibold text-foreground mb-4">
+              Portfolio Links
+            </label>
+            <p className="text-xs text-muted-foreground mb-6">
+              Add links to showcase your work and professional presence
+            </p>
+          </div>
+
+          {/* GitHub */}
+          <div className="space-y-2">
+            <label
+              htmlFor="github"
+              className="block text-sm font-medium text-foreground flex items-center gap-2"
+            >
               <Github size={16} />
               GitHub Profile
             </label>
@@ -250,23 +304,31 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
               id="github"
               type="url"
               value={formData.portfolioLinks.github}
-              onChange={(e) => setFormData({
-                ...formData,
-                portfolioLinks: { ...formData.portfolioLinks, github: e.target.value }
-              })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
-                errors.github ? "border-red-500" : "border-gray-300"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  portfolioLinks: {
+                    ...formData.portfolioLinks,
+                    github: e.target.value,
+                  },
+                })
+              }
+              className={`w-full px-4 py-3 bg-secondary border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all ${
+                errors.github ? "border-red-500" : "border-border"
               }`}
-              placeholder="https://github.com/yourusername"
+              placeholder="https://github.com/username"
             />
             {errors.github && (
-              <p className="text-red-500 text-sm mt-1">{errors.github}</p>
+              <p className="text-red-500 text-sm">{errors.github}</p>
             )}
           </div>
 
           {/* Website */}
-          <div>
-            <label htmlFor="website" className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+          <div className="space-y-2">
+            <label
+              htmlFor="website"
+              className="block text-sm font-medium text-foreground flex items-center gap-2"
+            >
               <Globe size={16} />
               Personal Website
             </label>
@@ -274,23 +336,31 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
               id="website"
               type="url"
               value={formData.portfolioLinks.website}
-              onChange={(e) => setFormData({
-                ...formData,
-                portfolioLinks: { ...formData.portfolioLinks, website: e.target.value }
-              })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
-                errors.website ? "border-red-500" : "border-gray-300"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  portfolioLinks: {
+                    ...formData.portfolioLinks,
+                    website: e.target.value,
+                  },
+                })
+              }
+              className={`w-full px-4 py-3 bg-secondary border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all ${
+                errors.website ? "border-red-500" : "border-border"
               }`}
               placeholder="https://yourwebsite.com"
             />
             {errors.website && (
-              <p className="text-red-500 text-sm mt-1">{errors.website}</p>
+              <p className="text-red-500 text-sm">{errors.website}</p>
             )}
           </div>
 
           {/* LinkedIn */}
-          <div>
-            <label htmlFor="linkedin" className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+          <div className="space-y-2">
+            <label
+              htmlFor="linkedin"
+              className="block text-sm font-medium text-foreground flex items-center gap-2"
+            >
               <Linkedin size={16} />
               LinkedIn Profile
             </label>
@@ -298,42 +368,47 @@ export default function ProfessionalInfoForm({ profile, onSave }) {
               id="linkedin"
               type="url"
               value={formData.portfolioLinks.linkedin}
-              onChange={(e) => setFormData({
-                ...formData,
-                portfolioLinks: { ...formData.portfolioLinks, linkedin: e.target.value }
-              })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
-                errors.linkedin ? "border-red-500" : "border-gray-300"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  portfolioLinks: {
+                    ...formData.portfolioLinks,
+                    linkedin: e.target.value,
+                  },
+                })
+              }
+              className={`w-full px-4 py-3 bg-secondary border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all ${
+                errors.linkedin ? "border-red-500" : "border-border"
               }`}
-              placeholder="https://linkedin.com/in/yourprofile"
+              placeholder="https://linkedin.com/in/username"
             />
             {errors.linkedin && (
-              <p className="text-red-500 text-sm mt-1">{errors.linkedin}</p>
+              <p className="text-red-500 text-sm">{errors.linkedin}</p>
             )}
           </div>
         </div>
 
         {/* Submit Button */}
-        <div className="flex items-center justify-between pt-4 border-t">
+        <div className="flex items-center justify-between pt-8 border-t border-border">
           <div>
             {saveStatus === "success" && (
-              <p className="text-green-600 text-sm flex items-center gap-2">
-                <Check size={16} />
+              <p className="text-green-600 text-sm flex items-center gap-2 font-medium">
+                <Check size={16} className="flex-shrink-0" />
                 Changes saved successfully
               </p>
             )}
             {saveStatus === "error" && (
-              <p className="text-red-600 text-sm flex items-center gap-2">
-                <X size={16} />
+              <p className="text-red-600 text-sm flex items-center gap-2 font-medium">
+                <X size={16} className="flex-shrink-0" />
                 {errors.submit || "Failed to save changes"}
               </p>
             )}
           </div>
-          
+
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
           >
             {isSaving ? (
               <>

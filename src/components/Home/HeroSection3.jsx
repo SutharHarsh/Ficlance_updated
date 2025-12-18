@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { FaRocket, FaPlayCircle } from "react-icons/fa";
 
 import LogoLoop from "../LogoLoop";
 import {
@@ -75,7 +76,10 @@ const HeroSection3 = () => {
                 >
                   Start Simulation
                 </button>
-                <button className="rounded-3xl text-lg text-gray-800 border-2 border-black bg-white hover:bg-[#FFA21F] hover:text-black hover:font-semibold transition-all duration-200 ease-linear px-10 py-1">
+                <button
+                  onClick={() => router.push("/auth/login")}
+                  className="rounded-3xl text-lg text-gray-800 border-2 border-black bg-white hover:bg-[#FFA21F] hover:text-black hover:font-semibold transition-all duration-200 ease-linear px-10 py-1"
+                >
                   Login
                 </button>
               </div>
@@ -125,19 +129,20 @@ const HeroSection3 = () => {
                 starts here.
               </h1>
               <p className="text-[16px] text-center text-gray-800 lg:text-left mx-2 sm:w-[450px] opacity-60">
-                Collaborate on simulated gigs, gain practical experience, and
-                grow your portfolio in a risk-free environment.
+                Where skills meet proof, AI-powered client simulations that turn learners into portfolio-ready professionals.
               </p>
 
               <div className="flex sm:flex-row flex-col gap-4">
                 <button
                   onClick={() => router.push("/dashboard")}
-                  className="bg-black cursor-pointer text-white px-8 py-3 rounded-full md:mr-4 w-60 sm:w-48 hover:bg-gray-800 transition-colors"
+                  className="bg-black cursor-pointer text-white px-8 py-3 rounded-full md:mr-4 w-60 sm:w-48 hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
                 >
+                  <FaRocket className="text-lg" />
                   Get Started
                 </button>
-                <button className="border cursor-pointer border-black text-black px-8 py-3 rounded-full hover:bg-gray-100 transition-colors">
-                  Learn More
+                <button className="border cursor-pointer border-black text-black px-8 py-3 rounded-full hover:bg-gray-100 transition-colors flex items-center justify-center gap-2">
+                  <FaPlayCircle className="text-lg" />
+                  View Demo
                 </button>
               </div>
             </div>

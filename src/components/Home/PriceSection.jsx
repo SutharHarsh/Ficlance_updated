@@ -5,16 +5,15 @@ const plans = [
     name: "rookie-mode",
     tagline: "start small, level up fast",
     features: [
-      "basic simulation projects",
-      "straightforward briefs (HTML, CSS, JS)",
-      "no customization required",
-      "1–2 day deadline cycles",
-      "earn up to 100 points per project",
-      "perfect for quick practice",
-      "instant feedback from simulated clients",
-      "ideal for portfolio kick-start",
-      "zero-risk, no-code reviews",
-      "build confidence with easy wins",
+      "Basic project simulations",
+      "Clear, easy-to-follow briefs",
+      "Work on projects that actually matter",
+      "Sharpen your skills faster through hands-on projects",
+      "Earn points for every completed project",
+      "Designed for quick practice and steady momentum",
+      "Great for starting your portfolio",
+      "Build confidence through fast wins",
+      "Start your journey and stand out with real experience"
     ],
     heightClass: "h-[470px]",
   },
@@ -29,12 +28,11 @@ const PriceSection = () => {
           choose your mode
         </p>
         <h2 className="text-4xl sm:text-5xl font-light text-gray-900">
-          Simulated <span className="font-medium">website dev journeys</span>{" "}
-          for every level
+          <span className="font-medium">Website Dev Journeys</span>{" "}
+          for Every Level
         </h2>
         <p className="mt-4 text-base sm:text-lg text-gray-600">
-          From chill practice gigs to full-on pro missions, earn points, level
-          up, and build a real portfolio.
+          From low-pressure practice projects to serious pro challenges, earn progress, level up, and build a portfolio that actually matters.
         </p>
       </div>
 

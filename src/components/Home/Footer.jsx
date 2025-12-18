@@ -34,38 +34,45 @@ const Footer = () => {
                 </span>
               </Link>
               <p className="text-slate-300 leading-relaxed mb-8 max-w-md">
-                Bridging the gap between learning and real-world freelancing
-                through immersive simulations. Transform your skills into real
-                opportunities.
+                Building experience before your first opportunity.
               </p>
 
               {/* Contact Info */}
               <div className="space-y-3 mb-8">
                 <div className="flex items-center text-slate-300">
                   <FaEnvelope className="w-4 h-4 mr-3 text-[#FFD54F]" />
-                  <span className="text-sm">hello@ficlance.com</span>
+                  <span className="text-sm">ficlance@gmail.com</span>
                 </div>
                 <div className="flex items-center text-slate-300">
                   <FaPhone className="w-4 h-4 mr-3 text-[#FFD54F]" />
-                  <span className="text-sm">+1 (555) 123-4567</span>
+                  <span className="text-sm">+91 9327668201</span>
                 </div>
-                <div className="flex items-center text-slate-300">
+                {/* <div className="flex items-center text-slate-300">
                   <FaMapMarkerAlt className="w-4 h-4 mr-3 text-[#FFD54F]" />
                   <span className="text-sm">San Francisco, CA</span>
-                </div>
+                </div> */}
               </div>
 
               {/* Social Links */}
               <div className="flex space-x-4">
                 {[
-                  { Icon: FaTwitter, label: "Twitter" },
-                  { Icon: FaLinkedinIn, label: "LinkedIn" },
-                  { Icon: FaFacebookF, label: "Facebook" },
-                  { Icon: FaInstagram, label: "Instagram" },
-                ].map(({ Icon, label }, i) => (
+                  {
+                    Icon: FaTwitter,
+                    label: "Twitter",
+                    link: "https://x.com/HarshSuthar2804",
+                  },
+                  {
+                    Icon: FaLinkedinIn,
+                    label: "LinkedIn",
+                    link: "https://www.linkedin.com/in/parva-shukla26/",
+                  },
+                  // { Icon: FaFacebookF, label: "Facebook", link: "#" },
+                  // { Icon: FaInstagram, label: "Instagram", link: "#" },
+                ].map(({ Icon, label, link }, i) => (
                   <Link
                     key={i}
-                    href="#"
+                    href={link}
+                    target="_blank"
                     aria-label={label}
                     className="w-11 h-11 rounded-xl bg-slate-800 flex items-center justify-center hover:bg-gradient-to-r hover:from-[#673AB7] hover:to-[#FF8C22] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
                   >
@@ -83,20 +90,17 @@ const Footer = () => {
               </h3>
               <ul className="space-y-4">
                 {[
-                  "Dashboard",
-                  "Projects",
-                  "Learning Path",
-                  "Portfolio",
-                  "Integrations",
-                  "Analytics",
-                ].map((item) => (
+                  { label: "Dashboard", link: "/dashboard",},
+                  { label: "Portfolio", link: "/portfolio" },
+                  { label: "Profile", link: "/profile" },
+                ].map(({ label, link }, item) => (
                   <li key={item}>
                     <Link
-                      href="#"
+                      href={link}
                       className="text-slate-300 hover:text-white transition-colors duration-200 flex items-center group text-sm"
                     >
                       <span className="group-hover:translate-x-1 transition-transform duration-200">
-                        {item}
+                        {label}
                       </span>
                       <FaArrowRight className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-all duration-200" />
                     </Link>
@@ -113,20 +117,16 @@ const Footer = () => {
               </h3>
               <ul className="space-y-4">
                 {[
-                  "Blog",
-                  "Documentation",
-                  "Community",
-                  "Support",
-                  "Pricing",
-                  "API",
-                ].map((item) => (
+                  { label: "Help Desk", link: "/help-desk" },
+                  { label: "Plans", link: "/pricing" },
+                ].map(({ label, link }, item) => (
                   <li key={item}>
                     <Link
-                      href="#"
+                      href={link}
                       className="text-slate-300 hover:text-white transition-colors duration-200 flex items-center group text-sm"
                     >
                       <span className="group-hover:translate-x-1 transition-transform duration-200">
-                        {item}
+                        {label}
                       </span>
                       <FaArrowRight className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-all duration-200" />
                     </Link>

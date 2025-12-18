@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Camera, CheckCircle, Clock } from "lucide-react";
+import { Camera, CheckCircle, Clock, Zap } from "lucide-react";
 
 export default function ProfileOverview({ profile, onAvatarUpdate }) {
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
@@ -11,25 +11,25 @@ export default function ProfileOverview({ profile, onAvatarUpdate }) {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric"
     });
   };
 
   const getRoleBadgeColor = (role) => {
     const colors = {
-      user: "bg-blue-100 text-blue-800",
-      admin: "bg-purple-100 text-purple-800",
-      freelancer: "bg-green-100 text-green-800"
+      user: "bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800",
+      admin: "bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800",
+      freelancer: "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800"
     };
     return colors[role] || colors.user;
   };
 
   const getExperienceBadge = (level) => {
     const badges = {
-      beginner: { label: "Beginner", color: "bg-gray-100 text-gray-800" },
-      intermediate: { label: "Intermediate", color: "bg-blue-100 text-blue-800" },
-      advanced: { label: "Advanced", color: "bg-green-100 text-green-800" }
+      beginner: { label: "Beginner", color: "bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-400 border border-gray-200 dark:border-gray-800" },
+      intermediate: { label: "Intermediate", color: "bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800" },
+      advanced: { label: "Advanced", color: "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800" }
     };
     return badges[level] || badges.beginner;
   };
@@ -53,7 +53,6 @@ export default function ProfileOverview({ profile, onAvatarUpdate }) {
 
     try {
       // TODO: Implement actual upload to storage service (S3, Cloudinary, etc.)
-      // For now, we'll use a data URL (not recommended for production)
       const reader = new FileReader();
       reader.onloadend = async () => {
         const dataUrl = reader.result;
@@ -72,31 +71,34 @@ export default function ProfileOverview({ profile, onAvatarUpdate }) {
   const avatarSrc = profile.customAvatar || profile.image || "/default-avatar.png";
 
   return (
-    <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-      <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-        {/* Avatar Section */}
-        <div className="relative group">
-          <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-100">
+    <div className="relative">
+      <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start">
+        {/* Avatar Section with Glow Effect */}
+        <div className="relative group flex-shrink-0">
+          {/* Soft glow ring */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-full blur-2xl group-hover:blur-3xl transition-all duration-500" />
+          
+          <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden ring-4 ring-background shadow-2xl">
             <Image
               src={avatarSrc}
               alt={profile.name || "User avatar"}
               fill
-              className="object-cover"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
               priority
             />
             {isUploadingAvatar && (
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-md">
+                <div className="w-8 h-8 border-3 border-white border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
           
-          {/* Upload Button */}
+          {/* Upload Button - More Premium */}
           <label 
             htmlFor="avatar-upload" 
-            className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors shadow-lg"
+            className="absolute bottom-2 right-2 bg-gradient-to-br from-primary to-blue-600 text-white p-3 rounded-full cursor-pointer hover:shadow-xl transition-all shadow-lg hover:scale-110 border-4 border-background"
           >
-            <Camera size={20} />
+            <Camera size={18} />
             <input
               id="avatar-upload"
               type="file"
@@ -108,87 +110,90 @@ export default function ProfileOverview({ profile, onAvatarUpdate }) {
           </label>
         </div>
 
-        {/* Profile Info */}
-        <div className="flex-1">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">
-                {profile.name || "Unnamed User"}
-              </h1>
-              {profile.username && (
-                <p className="text-muted-foreground mt-1">@{profile.username}</p>
-              )}
-              <p className="text-gray-500 mt-1">{profile.email}</p>
-              
-              {/* Bio Preview */}
-              {profile.bio && (
-                <p className="text-gray-700 mt-3 max-w-2xl line-clamp-2">
-                  {profile.bio}
-                </p>
-              )}
-            </div>
-
-            {/* Status Badges */}
-            <div className="flex flex-wrap gap-2">
-              {/* Email Verified Badge */}
-              {profile.emailVerified && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                  <CheckCircle size={14} />
-                  Verified
-                </span>
-              )}
-              
-              {/* Role Badge */}
-              {profile.roles?.map((role) => (
-                <span
-                  key={role}
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getRoleBadgeColor(role)}`}
-                >
-                  {role.charAt(0).toUpperCase() + role.slice(1)}
-                </span>
-              ))}
-              
-              {/* Experience Badge */}
-              {profile.experienceLevel && (
-                <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getExperienceBadge(profile.experienceLevel).color}`}
-                >
-                  {getExperienceBadge(profile.experienceLevel).label}
-                </span>
-              )}
-            </div>
+        {/* Profile Info - Redesigned as Content, Not Form */}
+        <div className="flex-1 min-w-0">
+          {/* Name as Headline */}
+          <div className="mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-2">
+              {profile.name || "Unnamed User"}
+            </h1>
+            {profile.username && (
+              <p className="text-lg text-muted-foreground">@{profile.username}</p>
+            )}
           </div>
 
-          {/* Metadata */}
-          <div className="flex flex-wrap gap-6 mt-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Clock size={16} />
-              <span>Joined {formatDate(profile.createdAt)}</span>
+          {/* Bio as Content Block */}
+          {profile.bio && (
+            <p className="text-base text-foreground/80 leading-relaxed max-w-2xl mb-6">
+              {profile.bio}
+            </p>
+          )}
+
+          {/* Product-Style Badges */}
+          <div className="flex flex-wrap gap-2 mb-8">
+            {profile.emailVerified && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-600 dark:text-green-400 border border-green-500/20 shadow-sm">
+                <CheckCircle size={14} />
+                Verified
+              </span>
+            )}
+            
+            {profile.roles?.map((role) => (
+              <span
+                key={role}
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm ${getRoleBadgeColor(role)}`}
+              >
+                {role.charAt(0).toUpperCase() + role.slice(1)}
+              </span>
+            ))}
+            
+            {profile.experienceLevel && (
+              <span
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm ${getExperienceBadge(profile.experienceLevel).color}`}
+              >
+                <Zap size={12} className="mr-1" />
+                {getExperienceBadge(profile.experienceLevel).label}
+              </span>
+            )}
+          </div>
+
+          {/* Metadata - Minimal & Elegant */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</p>
+              <p className="text-sm text-foreground font-medium">{profile.email}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Member Since</p>
+              <p className="text-sm text-foreground font-medium">{formatDate(profile.createdAt)}</p>
             </div>
             {profile.stats?.lastActiveDate && (
-              <div className="flex items-center gap-2">
-                <Clock size={16} />
-                <span>Last active {formatDate(profile.stats.lastActiveDate)}</span>
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Last Seen</p>
+                <p className="text-sm text-foreground font-medium">{formatDate(profile.stats.lastActiveDate)}</p>
               </div>
             )}
           </div>
 
-          {/* Skills Preview */}
+          {/* Skills as Visual Showcase */}
           {profile.skills && profile.skills.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-4">
-              {profile.skills.slice(0, 5).map((skill, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                >
-                  {skill}
-                </span>
-              ))}
-              {profile.skills.length > 5 && (
-                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
-                  +{profile.skills.length - 5} more
-                </span>
-              )}
+            <div className="pt-6 border-t border-border/50">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Expertise</p>
+              <div className="flex flex-wrap gap-2">
+                {profile.skills.slice(0, 8).map((skill, index) => (
+                  <span
+                    key={index}
+                    className="px-4 py-2 bg-secondary/50 hover:bg-secondary hover:shadow-md text-foreground rounded-xl text-sm font-medium transition-all border border-border/50 hover:border-primary/30 hover:-translate-y-0.5"
+                  >
+                    {skill}
+                  </span>
+                ))}
+                {profile.skills.length > 8 && (
+                  <span className="px-4 py-2 bg-primary/5 text-primary rounded-xl text-sm font-semibold border border-primary/20">
+                    +{profile.skills.length - 8} more
+                  </span>
+                )}
+              </div>
             </div>
           )}
         </div>

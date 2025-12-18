@@ -68,9 +68,7 @@ const Feature = () => {
               Your Personalized Learning Journey
             </h2>
             <p className="text-lg text-gray-600 mb-6">
-              Track your progress through increasingly complex projects that
-              build both technical and soft skills essential for freelancing
-              success.
+              Track your growth as you move from simpler projects to advanced ones, building both technical skills and professional habits needed for freelancing and jobs.
             </p>
             <ul className="space-y-4 mb-8">
               {checklist.map((item, i) => (
@@ -82,9 +80,6 @@ const Feature = () => {
                 </li>
               ))}
             </ul>
-            <button className="bg-gray-800 text-white hover:text-black px-8 py-3 rounded-button font-medium hover:bg-primary/90 transition whitespace-nowrap">
-              View Learning Path
-            </button>
           </div>
 
           {/* Right */}

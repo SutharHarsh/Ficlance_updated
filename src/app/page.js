@@ -12,6 +12,7 @@ import FreelanceCTA from "@/components/Home/FreelanceCTA";
 import Testimonials from "@/components/Home/Testimonials";
 import Footer from "@/components/Home/Footer";
 import HeroSection3 from "@/components/Home/HeroSection3";
+import SignupPopup from "@/components/Auth/SignupPopup";
 
 export default function HomePage() {
   return (
@@ -26,6 +27,9 @@ export default function HomePage() {
       <FreelanceCTA />
       <Testimonials />
       <Footer />
+      
+      {/* Timed Signup Popup */}
+      <SignupPopup />
     </div>
   );
 }

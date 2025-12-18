@@ -8,6 +8,7 @@ const UserSchema = new Schema(
     email: { type: String, required: true, index: true, unique: true },
     emailVerified: { type: Date, default: null },
     image: { type: String, default: null },
+    password: { type: String }, // For email/password authentication
     roles: { type: [String], default: ["user"] }
   },
   { timestamps: true }

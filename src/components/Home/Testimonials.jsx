@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
+import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 
 const TestimonialCard = ({ name, role, image, rating, message }) => {
   const stars = [];
@@ -40,12 +40,12 @@ const TestimonialCard = ({ name, role, image, rating, message }) => {
 const Testimonials = () => {
   const testimonials = [
     {
-      name: 'Ananya Mehra',
-      role: 'Frontend Developer',
-      image: 'https://randomuser.me/api/portraits/women/68.jpg',
+      name: "Ananya Mehra",
+      role: "Frontend Developer",
+      image: "https://randomuser.me/api/portraits/women/68.jpg",
       rating: 5,
       message:
-        'Ficlance was the bridge I needed between learning to code and landing my first real clients. The simulated projects gave me confidence and real-world experience.',
+        "Ficlance was the bridge I needed between learning to code and landing my first real clients. The simulated projects gave me confidence and real-world experience.",
     },
   ];
 
@@ -53,9 +53,11 @@ const Testimonials = () => {
     <section className="py-20 mx-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">What Our Users Say</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            What Our Users Say
+          </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Hear from freelancers who transformed their careers through Ficlance simulations.
+            Stories from users growing through real projects on Ficlance.
           </p>
         </div>
 

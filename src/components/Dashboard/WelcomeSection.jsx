@@ -12,7 +12,7 @@ export default function WelcomeSection({ username = "Alex", date = "June 29, 202
       type="button"
       onClick={onOpenNewProject}
       aria-label="Open new project"
-      className="bg-accent dark:bg-primary text-foreground dark:text-black dark:hover:text-white dark:hover:bg-accent hover:text-white px-4 py-2 rounded-lg font-medium hover:bg-foreground/90 transition flex items-center whitespace-nowrap"
+      className="bg-accent dark:bg-primary text-foreground dark:text-black dark:hover:bg-primary/80 px-4 py-2 rounded-lg font-medium hover:bg-accent/80 transition flex items-center whitespace-nowrap"
     >
       <div className="w-5 h-5 flex items-center justify-center mr-2" aria-hidden>
         <RiAddLine />

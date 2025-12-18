@@ -183,6 +183,7 @@ const MainGrid = ({ isLoading = false }) => {
         <InprogressProject />
         <CompletedProject onViewAll={handleViewAll} />
         <RecentActivities items={recentActivities} />
+        <Recommendations items={recommendations} />
       </div>
 
       {/* Right section: Deadlines, Skills, Achievements */}
@@ -192,7 +193,6 @@ const MainGrid = ({ isLoading = false }) => {
           <SkillsStatistics skills={skills} />
         </div>
         <AchievementBadges />
-        <Recommendations items={recommendations} />
       </div>
     </div>
   );

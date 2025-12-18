@@ -52,10 +52,10 @@ export default function ActivityStats({ stats }) {
   }
 
   return (
-    <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground">Activity & Progress</h2>
-        <p className="text-sm text-muted-foreground mt-1">
+    <div className="bg-card rounded-xl border border-border p-8">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-foreground">Activity & Progress</h2>
+        <p className="text-sm text-muted-foreground mt-2">
           Your performance metrics and activity overview
         </p>
       </div>
@@ -66,39 +66,39 @@ export default function ActivityStats({ stats }) {
           return (
             <div
               key={index}
-              className={`${stat.color} rounded-lg p-4 transition-all hover:shadow-md`}
+              className={`${stat.color} rounded-xl p-6 transition-all hover:shadow-md border border-opacity-20 hover:border-opacity-40`}
             >
-              <div className="flex items-start justify-between mb-3">
-                <div className={`${stat.iconBg} text-white p-2 rounded-lg`}>
+              <div className="flex items-start justify-between mb-4">
+                <div className={`${stat.iconBg} text-white p-3 rounded-lg`}>
                   <Icon size={20} />
                 </div>
               </div>
               
               <div>
-                <p className="text-2xl font-bold mb-1">{stat.value}</p>
-                <p className="text-sm opacity-80">{stat.label}</p>
+                <p className="text-3xl font-bold mb-1">{stat.value}</p>
+                <p className="text-sm opacity-80 font-medium">{stat.label}</p>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Additional Stats */}
-      <div className="mt-6 pt-6 border-t border-border">
-        <h3 className="text-sm font-medium text-foreground mb-4">Performance Breakdown</h3>
+      {/* Performance Breakdown */}
+      <div className="mt-8 pt-8 border-t border-border">
+        <h3 className="text-sm font-semibold text-foreground mb-6">Performance Breakdown</h3>
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Completion Rate Bar */}
           <div>
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-muted-foreground">Project Completion Rate</span>
-              <span className="font-medium text-foreground">
+            <div className="flex justify-between items-center mb-3">
+              <span className="text-sm font-medium text-foreground">Project Completion Rate</span>
+              <span className="text-sm font-bold text-foreground">
                 {stats?.deadlinesMetPercentage || 0}%
               </span>
             </div>
-            <div className="w-full bg-secondary rounded-full h-2">
+            <div className="w-full bg-secondary rounded-full h-3">
               <div
-                className="bg-green-500 h-2 rounded-full transition-all duration-500"
+                className="bg-green-500 h-3 rounded-full transition-all duration-500"
                 style={{ width: `${stats?.deadlinesMetPercentage || 0}%` }}
               />
             </div>
@@ -106,15 +106,15 @@ export default function ActivityStats({ stats }) {
 
           {/* Activity Level */}
           <div>
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-muted-foreground">Activity Level</span>
-              <span className="font-medium text-foreground">
+            <div className="flex justify-between items-center mb-3">
+              <span className="text-sm font-medium text-foreground">Activity Level</span>
+              <span className="text-sm font-bold text-foreground">
                 {getActivityLevel(stats?.lastActiveDate)}
               </span>
             </div>
-            <div className="w-full bg-secondary rounded-full h-2">
+            <div className="w-full bg-secondary rounded-full h-3">
               <div
-                className={`h-2 rounded-full transition-all duration-500 ${getActivityColor(stats?.lastActiveDate)}`}
+                className={`h-3 rounded-full transition-all duration-500 ${getActivityColor(stats?.lastActiveDate)}`}
                 style={{ width: `${getActivityPercentage(stats?.lastActiveDate)}%` }}
               />
             </div>
@@ -123,13 +123,13 @@ export default function ActivityStats({ stats }) {
       </div>
 
       {/* Insights */}
-      <div className="mt-6 pt-6 border-t border-border">
-        <h3 className="text-sm font-medium text-foreground mb-3">Quick Insights</h3>
-        <div className="space-y-2">
+      <div className="mt-8 pt-8 border-t border-border">
+        <h3 className="text-sm font-semibold text-foreground mb-4">Quick Insights</h3>
+        <div className="space-y-3">
           {getInsights(stats).map((insight, index) => (
-            <div key={index} className="flex items-start gap-2 text-sm">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5" />
-              <p className="text-muted-foreground">{insight}</p>
+            <div key={index} className="flex items-start gap-3">
+              <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <p className="text-sm text-foreground">{insight}</p>
             </div>
           ))}
         </div>

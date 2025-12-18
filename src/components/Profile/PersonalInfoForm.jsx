@@ -160,77 +160,74 @@ export default function PersonalInfoForm({ profile, onSave }) {
   };
 
   return (
-    <div className="bg-card rounded-lg shadow-sm border border-border p-6">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-foreground">Personal Information</h2>
-        <p className="text-sm text-muted-foreground mt-1">
+    <div className="bg-card rounded-xl border border-border p-8">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-foreground">Personal Information</h2>
+        <p className="text-sm text-muted-foreground mt-2">
           Update your personal details and profile information
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Username */}
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-2">
+          <label htmlFor="username" className="block text-sm font-semibold text-foreground">
             Username
           </label>
+          <p className="text-xs text-muted-foreground">Your unique identifier on the platform</p>
           <div className="relative">
             <input
               id="username"
               type="text"
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors ${
-                errors.username ? "border-red-500" : "border-gray-300"
+              className={`w-full px-4 py-3 bg-secondary border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all ${
+                errors.username ? "border-red-500 ring-2 ring-red-200" : "border-border"
               }`}
               placeholder="johndoe_123"
             />
             {isCheckingUsername && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <Loader size={16} className="animate-spin text-gray-400" />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                <Loader size={18} className="animate-spin text-primary" />
               </div>
             )}
             {!isCheckingUsername && usernameAvailable === true && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <Check size={16} className="text-green-500" />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                <Check size={18} className="text-green-500" />
               </div>
             )}
             {!isCheckingUsername && usernameAvailable === false && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <X size={16} className="text-red-500" />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                <X size={18} className="text-red-500" />
               </div>
             )}
           </div>
           {errors.username && (
-            <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+            <p className="text-red-500 text-sm mt-2">{errors.username}</p>
           )}
-          <p className="text-gray-500 text-xs mt-1">
-            Your unique identifier. Letters, numbers, underscores, and hyphens only.
-          </p>
         </div>
 
         {/* Bio */}
-        <div>
-          <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-2">
+          <label htmlFor="bio" className="block text-sm font-semibold text-foreground">
             Bio
           </label>
+          <p className="text-xs text-muted-foreground">Tell us about yourself and your goals</p>
           <textarea
             id="bio"
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
             rows={4}
             maxLength={250}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none ${
-              errors.bio ? "border-red-500" : "border-gray-300"
+            className={`w-full px-4 py-3 bg-secondary border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-none ${
+              errors.bio ? "border-red-500 ring-2 ring-red-200" : "border-border"
             }`}
-            placeholder="Tell us about yourself..."
+            placeholder="I'm passionate about..."
           />
-          <div className="flex justify-between items-center mt-1">
-            <p className="text-gray-500 text-xs">
-              A brief description about you and your goals
-            </p>
-            <p className="text-gray-500 text-xs">
-              {formData.bio.length}/250
+          <div className="flex justify-between items-center mt-2">
+            <p className="text-xs text-muted-foreground"></p>
+            <p className="text-xs text-muted-foreground">
+              {formData.bio.length}/250 characters
             </p>
           </div>
           {errors.bio && (
@@ -239,85 +236,89 @@ export default function PersonalInfoForm({ profile, onSave }) {
         </div>
 
         {/* Skills */}
-        <div>
-          <label htmlFor="skill-input" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-2">
+          <label htmlFor="skill-input" className="block text-sm font-semibold text-foreground">
             Skills
           </label>
-          <div className="flex gap-2 mb-3">
+          <p className="text-xs text-muted-foreground">Add technologies and skills you're proficient in</p>
+          <div className="flex gap-2">
             <input
               id="skill-input"
               type="text"
               value={skillInput}
               onChange={(e) => setSkillInput(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddSkill())}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="flex-1 px-4 py-3 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all"
               placeholder="e.g., React, Node.js, Python"
             />
             <button
               type="button"
               onClick={handleAddSkill}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 bg-secondary border border-border text-foreground rounded-lg hover:bg-secondary/80 transition-colors font-medium text-sm"
             >
               Add
             </button>
           </div>
           
           {/* Skills List */}
-          <div className="flex flex-wrap gap-2">
-            {formData.skills.map((skill, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-              >
-                {skill}
-                <button
-                  type="button"
-                  onClick={() => handleRemoveSkill(skill)}
-                  className="hover:text-blue-900"
+          {formData.skills.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-4">
+              {formData.skills.map((skill, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 border border-primary/20 text-primary rounded-full text-sm font-medium group hover:bg-primary/20 transition-colors"
                 >
-                  <X size={14} />
-                </button>
-              </span>
-            ))}
-          </div>
+                  {skill}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveSkill(skill)}
+                    className="opacity-60 hover:opacity-100 transition-opacity"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
           
           {errors.skills && (
             <p className="text-red-500 text-sm mt-2">{errors.skills}</p>
           )}
-          <p className="text-gray-500 text-xs mt-2">
-            {formData.skills.length}/20 skills added
+          <p className="text-xs text-muted-foreground mt-2">
+            {formData.skills.length}/20 skills
           </p>
         </div>
 
         {/* Experience Level */}
-        <div>
-          <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-2">
+          <label htmlFor="experience" className="block text-sm font-semibold text-foreground">
             Experience Level
           </label>
+          <p className="text-xs text-muted-foreground">How would you describe your experience?</p>
           <select
             id="experience"
             value={formData.experienceLevel}
             onChange={(e) => setFormData({ ...formData, experienceLevel: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all"
           >
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="advanced">Advanced</option>
+            <option value="beginner">Beginner - Just starting out</option>
+            <option value="intermediate">Intermediate - Some experience</option>
+            <option value="advanced">Advanced - Highly skilled</option>
           </select>
         </div>
 
         {/* Submit Button */}
-        <div className="flex items-center justify-between pt-4 border-t">
+        <div className="flex items-center justify-between pt-8 border-t border-border">
           <div>
             {saveStatus === "success" && (
-              <p className="text-green-600 text-sm flex items-center gap-2">
-                <Check size={16} />
+              <p className="text-green-600 text-sm flex items-center gap-2 font-medium">
+                <Check size={16} className="flex-shrink-0" />
                 Changes saved successfully
               </p>
             )}
             {saveStatus === "error" && (
-              <p className="text-red-600 text-sm flex items-center gap-2">
-                <X size={16} />
+              <p className="text-red-600 text-sm flex items-center gap-2 font-medium">
+                <X size={16} className="flex-shrink-0" />
                 {errors.submit || "Failed to save changes"}
               </p>
             )}
@@ -326,7 +327,7 @@ export default function PersonalInfoForm({ profile, onSave }) {
           <button
             type="submit"
             disabled={isSaving || isCheckingUsername}
-            className="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
           >
             {isSaving ? (
               <>

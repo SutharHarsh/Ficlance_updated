@@ -36,11 +36,16 @@ export const generateRequirementsDocument = async (conversation) => {
   // If requirements is an object with message property
   if (requirements && requirements.message) {
     const message = requirements.message;
-    description = message.description || message.project_description || "No description provided";
-    tech_stack = (message.tech_stack || message.technologies || []).map(cleanLine);
+    description =
+      message.description ||
+      message.project_description ||
+      "No description provided";
+    tech_stack = (message.tech_stack || message.technologies || []).map(
+      cleanLine
+    );
     expertise = message.expertise || message.Expertise || "Not specified";
     duration = message.duration || message.Duration || "Not specified";
-    
+
     // Extract requirements list (support acceptance_criteria and generic requirements)
     if (Array.isArray(message.acceptance_criteria)) {
       requirementsList = [...message.acceptance_criteria.map(cleanLine)];
@@ -51,18 +56,33 @@ export const generateRequirementsDocument = async (conversation) => {
       requirementsList = requirementsList.length
         ? requirementsList.concat(cleanedReqs)
         : cleanedReqs;
-    } else if (message.requirements && typeof message.requirements === "object") {
-      const entries = Object.entries(message.requirements).map(([key, value]) =>
-        `${key}: ${typeof value === "object" ? JSON.stringify(value) : value}`
+    } else if (
+      message.requirements &&
+      typeof message.requirements === "object"
+    ) {
+      const entries = Object.entries(message.requirements).map(
+        ([key, value]) =>
+          `${key}: ${typeof value === "object" ? JSON.stringify(value) : value}`
       );
-      requirementsList = requirementsList.length ? requirementsList.concat(entries.map(cleanLine)) : entries.map(cleanLine);
+      requirementsList = requirementsList.length
+        ? requirementsList.concat(entries.map(cleanLine))
+        : entries.map(cleanLine);
     }
   } else if (requirements) {
     // Direct requirements object
-    description = requirements.description || requirements.project_description || "No description provided";
-    tech_stack = (requirements.tech_stack || requirements.technologies || []).map(cleanLine);
-    expertise = requirements.expertise || requirements.Expertise || "Not specified";
-    duration = requirements.duration || requirements.Duration || "Not specified";
+    description =
+      requirements.description ||
+      requirements.project_description ||
+      "No description provided";
+    tech_stack = (
+      requirements.tech_stack ||
+      requirements.technologies ||
+      []
+    ).map(cleanLine);
+    expertise =
+      requirements.expertise || requirements.Expertise || "Not specified";
+    duration =
+      requirements.duration || requirements.Duration || "Not specified";
   }
 
   // Format deadline
@@ -227,13 +247,16 @@ export const generateRequirementsDocument = async (conversation) => {
 
           // Add numbered requirements from the requirements list
           ...(requirementsList.length > 0
-            ? requirementsList.map((req, index) =>
-                new Paragraph({
-                  text: `${index + 1}. ${typeof req === "object" ? JSON.stringify(req) : req}`,
-                  spacing: {
-                    after: 200,
-                  },
-                })
+            ? requirementsList.map(
+                (req, index) =>
+                  new Paragraph({
+                    text: `${index + 1}. ${
+                      typeof req === "object" ? JSON.stringify(req) : req
+                    }`,
+                    spacing: {
+                      after: 200,
+                    },
+                  })
               )
             : [
                 new Paragraph({
@@ -282,6 +305,60 @@ export const generateRequirementsDocument = async (conversation) => {
             ],
             alignment: AlignmentType.CENTER,
           }),
+
+          // new Paragraph({
+          //   children: [
+          //     new TextRun({
+          //       text: "Project Submission Process",
+          //       bold: true,
+          //       size: 24,
+          //     }),
+          //     new TextRun({
+          //       text: "After completing your project copy your github repo url then click on the github icon and paste the link there for submission.",
+          //       size: 24,
+          //     }),
+          //   ],
+          //   spacing: {
+          //     brefore: 200,
+          //     after: 200,
+          //   },
+          // }),
+
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
+            spacing: {
+              before: 400,
+              after: 200,
+            },
+            children: [
+              new TextRun({
+                text: "Project Submission Process",
+                bold: true,
+                size: 48, // docx size is in HALF-POINTS (24pt × 2)
+                color: "FF5733", // Hex color WITHOUT #
+              }),
+            ],
+          }),
+
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: {
+              after: 200,
+            },
+            children: [
+              new TextRun({
+                text: "⚠️  ",
+                size: 28,
+              }),
+              new TextRun({
+                text: "Once your project is complete, copy the GitHub repository URL. Click the GitHub icon below the message input field in the chat, paste the link, and submit your project.",
+                size: 28,
+                bold: true,
+                color: "B45309",
+              }),
+            ],
+          }),
         ],
       },
     ],
@@ -294,7 +371,9 @@ export const downloadDocument = async (conversation) => {
   try {
     const doc = await generateRequirementsDocument(conversation);
     const blob = await Packer.toBlob(doc);
-    const fileName = `${conversation?.projectName || "Project"}_Requirements.docx`;
+    const fileName = `${
+      conversation?.projectName || "Project"
+    }_Requirements.docx`;
     saveAs(blob, fileName);
   } catch (error) {
     console.error("Error generating document:", error);
