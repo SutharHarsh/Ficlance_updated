@@ -304,61 +304,26 @@ export default function ProjectSection({ filters = null }) {
       return;
     }
 
-    setIsLoading(true);
     const project = allProjects.find((p) => p.id === selectedProject);
 
-    try {
-      // 1. Call requirements API
-      const payload = {
-        Expertise: filters?.difficulty || "Intermediate",
-        TechStack: filters?.skills || [],
-        Duration: filters?.duration || "3-5 days",
-        ProjectName: project.title,
-        Description: project.description,
-      };
+    // ✅ Store project data in sessionStorage for destination page
+    const projectData = {
+      Expertise: filters?.difficulty || "Intermediate",
+      TechStack: filters?.skills || [],
+      Duration: filters?.duration || "3-5 days",
+      ProjectName: project.title,
+      Description: project.description,
+      projectId: project.id,
+      userId: session.user.email,
+    };
 
-      const reqResponse = await fetch("/api/proxy/requirements", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    sessionStorage.setItem("pendingProject", JSON.stringify(projectData));
 
-      if (!reqResponse.ok) {
-        throw new Error("Failed to fetch requirements");
-      }
+    // ✅ NAVIGATE IMMEDIATELY - No blocking!
+    router.push("/chat/new");
 
-      const reqData = await reqResponse.json();
-
-      // 2. Create Conversation
-      const convResponse = await fetch("/api/conversations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: session.user.email, // Using email as userId for now, or session.user.id if available
-          projectId: project.id,
-          projectName: project.title,
-          duration: reqData.duration || project.duration,
-          requirements: reqData,
-          aiName: reqData.ai_name,
-        }),
-      });
-
-      if (!convResponse.ok) {
-        throw new Error("Failed to create conversation");
-      }
-
-      const convData = await convResponse.json();
-
-      // 3. Redirect to chat
-      router.push(`/chat/${convData.conversationId}`);
-    } catch (error) {
-      console.error("Error starting simulation:", error);
-      alert(
-        "An error occurred while starting the simulation. Please try again."
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    // Note: The /chat/new page will handle the async operations
+    // and redirect to the actual conversation ID
   };
 
   return (

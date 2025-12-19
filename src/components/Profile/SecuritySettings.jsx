@@ -13,18 +13,19 @@ export default function SecuritySettings({ profile }) {
   const getAuthProviderInfo = () => {
     // Determine which auth provider(s) the user has
     const providers = [];
-    
+
     // This is simplified - in production, you'd fetch this from the session or account data
     if (profile.email?.includes("gmail")) {
       providers.push({ name: "Google", icon: "🔍" });
     }
     // Check for GitHub or other providers based on your auth setup
-    
+
     return providers.length > 0 ? providers : [{ name: "Email", icon: "📧" }];
   };
 
   const handleLogout = async () => {
     try {
+      sessionStorage.clear();
       await signOut({ callbackUrl: "/" });
     } catch (error) {
       console.error("Logout failed:", error);
@@ -46,8 +47,8 @@ export default function SecuritySettings({ profile }) {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          confirmation: "DELETE_MY_ACCOUNT"
-        })
+          confirmation: "DELETE_MY_ACCOUNT",
+        }),
       });
 
       const data = await response.json();
@@ -95,8 +96,12 @@ export default function SecuritySettings({ profile }) {
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{provider.icon}</span>
                     <div>
-                      <p className="font-medium text-foreground">{provider.name}</p>
-                      <p className="text-sm text-muted-foreground">{profile.email}</p>
+                      <p className="font-medium text-foreground">
+                        {provider.name}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {profile.email}
+                      </p>
                     </div>
                   </div>
                   <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
@@ -116,11 +121,17 @@ export default function SecuritySettings({ profile }) {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between py-2">
                 <span className="text-muted-foreground">Email</span>
-                <span className="font-medium text-foreground">{profile.email}</span>
+                <span className="font-medium text-foreground">
+                  {profile.email}
+                </span>
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-muted-foreground">Email Verified</span>
-                <span className={`font-medium ${profile.emailVerified ? "text-green-600" : "text-orange-600"}`}>
+                <span
+                  className={`font-medium ${
+                    profile.emailVerified ? "text-green-600" : "text-orange-600"
+                  }`}
+                >
                   {profile.emailVerified ? "Yes" : "Not verified"}
                 </span>
               </div>
@@ -132,7 +143,9 @@ export default function SecuritySettings({ profile }) {
               </div>
               <div className="flex justify-between py-2">
                 <span className="text-muted-foreground">User ID</span>
-                <span className="font-mono text-xs text-muted-foreground">{profile.id?.slice(0, 16)}...</span>
+                <span className="font-mono text-xs text-muted-foreground">
+                  {profile.id?.slice(0, 16)}...
+                </span>
               </div>
             </div>
           </div>
@@ -158,7 +171,8 @@ export default function SecuritySettings({ profile }) {
             </button>
 
             <p className="text-xs text-gray-500 text-center">
-              Deleting your account is permanent and cannot be undone. All your data will be lost.
+              Deleting your account is permanent and cannot be undone. All your
+              data will be lost.
             </p>
           </div>
         </div>
@@ -175,7 +189,8 @@ export default function SecuritySettings({ profile }) {
 
             <div className="mb-6 space-y-3">
               <p className="text-gray-700">
-                This action <strong>cannot be undone</strong>. This will permanently delete your account and remove all associated data:
+                This action <strong>cannot be undone</strong>. This will
+                permanently delete your account and remove all associated data:
               </p>
               <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ml-2">
                 <li>Your profile information</li>
@@ -184,7 +199,11 @@ export default function SecuritySettings({ profile }) {
                 <li>Activity stats and progress</li>
               </ul>
               <p className="text-gray-700 font-medium mt-4">
-                Type <code className="bg-gray-100 px-2 py-1 rounded text-red-600 font-mono text-sm">DELETE_MY_ACCOUNT</code> to confirm:
+                Type{" "}
+                <code className="bg-gray-100 px-2 py-1 rounded text-red-600 font-mono text-sm">
+                  DELETE_MY_ACCOUNT
+                </code>{" "}
+                to confirm:
               </p>
             </div>
 
@@ -218,7 +237,9 @@ export default function SecuritySettings({ profile }) {
               </button>
               <button
                 onClick={handleDeleteAccount}
-                disabled={isDeleting || deleteConfirmation !== "DELETE_MY_ACCOUNT"}
+                disabled={
+                  isDeleting || deleteConfirmation !== "DELETE_MY_ACCOUNT"
+                }
                 className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
               >
                 {isDeleting ? "Deleting..." : "Delete Forever"}

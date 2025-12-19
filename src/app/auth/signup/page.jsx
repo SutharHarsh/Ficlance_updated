@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AuthPageLayout from "@/components/Auth/AuthPageLayout";
@@ -28,6 +28,15 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  // Handle error from URL params (optimistic navigation failure)
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error) {
+      setServerError(decodeURIComponent(error));
+    }
+  }, []);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -79,34 +88,36 @@ export default function SignUpPage() {
 
     setLoading(true);
 
-    try {
-      // Call your API endpoint to create user
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-        }),
+    // ✅ OPTIMISTIC NAVIGATION - Start signup in background
+    const signupPromise = fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
+
+    // ✅ NAVIGATE IMMEDIATELY - Don't wait for API!
+    router.push("/auth/login?registered=true");
+
+    // Handle signup result in background
+    signupPromise
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) {
+          // If signup fails, redirect back with error
+          router.push(`/auth/signup?error=${encodeURIComponent(data.error || 'Registration failed')}`);
+        }
+      })
+      .catch((error) => {
+        console.error("Signup error:", error);
+        router.push(`/auth/signup?error=${encodeURIComponent(error.message)}`);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Registration failed");
-      }
-
-      // Success - show message and redirect
-      setSuccess(true);
-      setTimeout(() => {
-        router.push("/auth/login?registered=true");
-      }, 2000);
-    } catch (error) {
-      setServerError(error.message);
-    } finally {
-      setLoading(false);
-    }
   };
 
   if (success) {

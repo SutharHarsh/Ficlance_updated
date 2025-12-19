@@ -29,13 +29,17 @@ export default function LoginPage() {
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Check for registration success message
+  // Check for registration success message and auth errors
   useEffect(() => {
+    const error = searchParams.get('error');
+    if (error === 'invalid') {
+      setServerError('Invalid email or password');
+    } else if (error === 'unexpected') {
+      setServerError('An unexpected error occurred');
+    }
+    
     if (searchParams.get("registered") === "true") {
       setSuccessMessage("Account created successfully! Please log in.");
-    }
-    if (searchParams.get("error")) {
-      setServerError("Authentication failed. Please try again.");
     }
   }, [searchParams]);
 
@@ -78,25 +82,28 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    try {
-      // Use NextAuth credentials provider
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: formData.email,
-        password: formData.password,
-      });
+    // ✅ OPTIMISTIC NAVIGATION - Start auth in background
+    const authPromise = signIn("credentials", {
+      redirect: false,
+      email: formData.email,
+      password: formData.password,
+    });
 
+    // ✅ NAVIGATE IMMEDIATELY - Don't wait for auth!
+    router.push("/dashboard");
+
+    // Handle auth result in background
+    authPromise.then((result) => {
       if (result?.error) {
-        setServerError("Invalid email or password");
-      } else if (result?.ok) {
-        // Successful login - redirect to dashboard
-        router.push("/dashboard");
+        // If auth fails, redirect back to login with error
+        router.push("/auth/login?error=invalid");
       }
-    } catch (error) {
-      setServerError("An unexpected error occurred");
-    } finally {
+    }).catch((error) => {
+      console.error("Auth error:", error);
+      router.push("/auth/login?error=unexpected");
+    }).finally(() => {
       setLoading(false);
-    }
+    });
   };
 
   return (

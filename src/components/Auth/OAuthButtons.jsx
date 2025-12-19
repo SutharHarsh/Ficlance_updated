@@ -42,7 +42,7 @@ export default function OAuthButtons({ callbackUrl = "/dashboard" }) {
   ];
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {providers.map((provider) => {
         const Icon = provider.icon;
         const isLoading = loadingProvider === provider.id;

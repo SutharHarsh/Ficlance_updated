@@ -32,7 +32,7 @@ export default function SignupPopup() {
     const previousStatus = statusRef.current;
     statusRef.current = status;
     console.log("🔍 [POPUP] Auth status updated:", status);
-    
+
     // If user logs out (authenticated → unauthenticated), reset the flag
     if (previousStatus === "authenticated" && status === "unauthenticated") {
       console.log("🔓 [POPUP] User logged out - clearing flag");
@@ -43,45 +43,45 @@ export default function SignupPopup() {
   // Start timer on mount (runs ONCE)
   useEffect(() => {
     console.log("🚀 [POPUP] Component mounted!");
-    
+
     // FORCE RESET for testing (remove in production)
-    const forceReset = new URLSearchParams(window.location.search).get('popup');
-    if (forceReset === 'reset') {
+    const forceReset = new URLSearchParams(window.location.search).get("popup");
+    if (forceReset === "reset") {
       console.log("🔧 [POPUP] FORCE RESET via ?popup=reset");
       sessionStorage.removeItem("signup-popup-shown");
     }
-    
+
     // Check if popup has been shown this session
     const hasSeenPopup = sessionStorage.getItem("signup-popup-shown");
     console.log("📦 [POPUP] SessionStorage flag:", hasSeenPopup);
-    
-    if (hasSeenPopup && forceReset !== 'reset') {
+
+    if (hasSeenPopup && forceReset !== "reset") {
       console.log("⚠️ [POPUP] Already shown - NOT starting timer");
       return;
     }
 
     console.log("✅ [POPUP] Starting 30-second timer NOW!");
-    
+
     // Show popup after 30 seconds
     const timer = setTimeout(() => {
       console.log("⏰ [POPUP] 30 SECONDS ELAPSED!");
-      
+
       // Check current authentication status via ref (gets latest value)
       const currentStatus = statusRef.current;
       console.log("🔍 [POPUP] Current status at timer fire:", currentStatus);
-      
+
       // Only show if user is unauthenticated
       if (currentStatus === "authenticated") {
         console.log("🔒 [POPUP] User authenticated - NOT showing");
         sessionStorage.setItem("signup-popup-shown", "true");
         return;
       }
-      
+
       if (currentStatus === "loading") {
         console.log("⏳ [POPUP] Still loading - NOT showing");
         return;
       }
-      
+
       console.log("🎉 [POPUP] SHOWING POPUP NOW!");
       setIsOpen(true);
       sessionStorage.setItem("signup-popup-shown", "true");
@@ -226,7 +226,7 @@ export default function SignupPopup() {
                 Ready to get started?
               </h2>
               <p className="text-sm sm:text-base text-gray-600 dark:text-muted-foreground">
-                Join thousands of freelancers and clients on FicLance
+                Start your Journey with FicLance today!
               </p>
             </div>
 
@@ -237,7 +237,7 @@ export default function SignupPopup() {
             <Divider text="or sign up with email" />
 
             {/* Quick Signup Form */}
-            <form onSubmit={handleQuickSignup} className="space-y-4">
+            <form onSubmit={handleQuickSignup} className="space-y-3">
               {serverError && (
                 <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
                   <p className="text-sm text-red-600 dark:text-red-400">
@@ -282,30 +282,22 @@ export default function SignupPopup() {
                     handleClose();
                     router.push("/auth/login");
                   }}
-                  className="font-semibold text-accent hover:text-accent/80 transition-colors"
+                  className="font-semibold text-primary hover:text-primary/80 transition-colors"
                 >
                   Log in
                 </button>
               </p>
               <p className="text-xs text-gray-500 dark:text-muted-foreground">
-                By signing up, you agree to our{" "}
+                Go to our{" "}
                 <a
-                  href="/terms"
-                  className="underline hover:text-accent transition-colors"
+                  href="/helpdesk"
+                  className="underline hover:text-primary/80 transition-colors"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Terms
+                  HelpDesk
                 </a>{" "}
-                and{" "}
-                <a
-                  href="/privacy"
-                  className="underline hover:text-accent transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Privacy Policy
-                </a>
+                for assistance.
               </p>
             </div>
           </div>
